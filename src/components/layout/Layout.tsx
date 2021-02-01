@@ -1,19 +1,16 @@
 import React from 'react';
 import ErrorBoundary from './ErrorBoundary';
-
-const plainDisplay = true;
+import ResetStyle from './global/ResetStyle';
+import GlobalStyle from './global/GlobalStyle';
 
 const Layout: React.FC = ({ children }) => (
-    <ErrorBoundary>
-        {!plainDisplay ? (
-            <div>
-                {children}
-            </div>
-        ) : (
-            children
-        )}
-    </ErrorBoundary>
+    <>
+        <ResetStyle />
+        <GlobalStyle />
+        <ErrorBoundary>
+            {children}
+        </ErrorBoundary>
+    </>
 );
 
-// can be connected
 export default Layout;
