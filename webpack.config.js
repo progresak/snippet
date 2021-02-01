@@ -28,7 +28,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        babelrc: false,
+                        babelrc: true,
                         retainLines: true,
                         presets: [
                             [
@@ -63,6 +63,10 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.svg$/,
+                loader: 'svg-url-loader',
             },
         ],
     },

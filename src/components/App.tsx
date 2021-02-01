@@ -1,7 +1,7 @@
 import React, { Component, ErrorInfo, Suspense } from 'react';
 
 import Layout from './layout/Layout';
-import { Dashboard } from './views/dashboard';
+import Dashboard from './views/Dashboard';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars

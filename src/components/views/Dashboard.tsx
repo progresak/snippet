@@ -1,11 +1,11 @@
 import React from 'react';
+import { MainFilter } from '../common';
 
 interface Props {
 }
 const Dashboard: React.FC<Props> = () => (
     <div>
-        ahoj
-        <h1>This is not what Ive expected</h1>
+        <MainFilter />
     </div>
 );
 

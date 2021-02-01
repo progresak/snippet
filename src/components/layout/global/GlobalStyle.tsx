@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
   
   body {
     font-family: 'Open Sans', sans-serif;
+    letter-spacing: 0.4px;
   }
 `;
 
