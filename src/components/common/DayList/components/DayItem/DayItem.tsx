@@ -3,25 +3,25 @@ import styled from 'styled-components';
 import { Workout } from './components';
 import EmptyDay from '../EmptyDay';
 import CalendarImage from '../../../../images/calendar.svg';
-import { Calendar } from '../../../../../types';
+import { WithId } from '../../../../../types';
 
-type DayItemProps = Calendar;
+interface DayItemProps {
+    date: string,
+    calendarIds: (WithId & {dateKey: string})[];
+}
 
-// group by same date
-
-const DayItem: React.FC<DayItemProps> = ({ from }) => (
+const DayItem: React.FC<DayItemProps> = ({ date, calendarIds }) => (
     <Wrapper>
         <TitleElement>
-            <CalendarIcon src={CalendarImage} alt="Pondělí" />
+            <CalendarIcon src={CalendarImage} alt={date} />
             &nbsp;
             <span>
-                Pondělí
-                {from}
+                {date}
+                {/* // TODO: to date format */}
             </span>
         </TitleElement>
         <WorkoutsWrapper>
-            <Workout />
-            <Workout />
+            {calendarIds.map(({ id }) => <Workout id={id} key={id} />)}
         </WorkoutsWrapper>
         <EmptyDay />
     </Wrapper>

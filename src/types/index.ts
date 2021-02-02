@@ -121,3 +121,7 @@ export interface FetchBaseResponse {
     address: Address;
     calendars: Calendar[];
 }
+
+export interface WithId {
+    id: string;
+}

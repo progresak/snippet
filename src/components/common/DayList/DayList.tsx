@@ -1,27 +1,31 @@
 import React from 'react';
 import DayItem from './components/DayItem/DayItem';
-import { withStoreProps } from '../withStateContext';
-import { Calendar } from '../../../types';
+import { withSelectorProps } from '../withStateContext';
+import { getGroupedCalendarsByDate } from '../../../selectors';
+import { WithId } from '../../../types';
 
 interface DayListProps {
-    calendars: Calendar[];
+    days: Record<string, WithId & {dateKey: string}>
 }
 
-const renderDayItem = ({ id, ...calendar }: Calendar) => <DayItem key={id} {...calendar} />;
-const renderItems = (calendars: Calendar[]) => calendars.map(renderDayItem);
+const renderItems = (days: Record<string, WithId & {dateKey: string}>) => Object.keys(days).map((dateKey) => {
+    const calendarIds = days[dateKey];
 
-const DayList: React.FC<DayListProps> = ({ calendars }) => {
-    if (!calendars) {
+    return <DayItem key={dateKey} date={dateKey} calendarIds={calendarIds} />;
+});
+
+const DayList: React.FC<DayListProps> = ({ days }) => {
+    if (!days) {
         return (<span>Loading...</span>); // todo: spinner
     }
 
     return (
         <>
-            {renderItems(calendars)}
+            {renderItems(days)}
         </>
     );
 };
 
-const withListData = withStoreProps(['baseData', 'calendars'], 'calendars');
+const withListData = withSelectorProps(getGroupedCalendarsByDate, 'days');
 
 export default withListData(DayList);

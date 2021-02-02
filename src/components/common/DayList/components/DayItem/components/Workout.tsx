@@ -3,40 +3,59 @@ import styled from 'styled-components';
 import placeholder from '../../../../../images/running.png';
 import profile from '../../../../../images/profile.png';
 import Occupancy from './Occupancy';
+import { withSelectorProps } from '../../../../withStateContext';
+import { getCalendarById } from '../../../../../../selectors';
+import { Calendar } from '../../../../../../types';
 
-const Workout = () => (
-    <Wrapper>
-        <ImageWrapper>
-            <WorkoutImage src={placeholder} alt="placeholder" />
-        </ImageWrapper>
-        <ContentWrapper>
-            <ContentHeading>
-                <DateElement>Pondělí 25.1 17:00</DateElement>
-                <GreenText>60 min</GreenText>
-                <GreenText>Cena: 150 Kč</GreenText>
-                <Occupancy current={7} max={10} />
-            </ContentHeading>
-            <ContentBody>
-                <Information>
-                    <h3>Kruhový trening</h3>
-                    <span>skupinové cvičení s TRX</span>
-                    <Note>Poznámka: přineste si taneční boty</Note>
-                </Information>
-                <Instructor>
-                    <AvatarWrapper>
-                        <Avatar src={profile} alt="Profil" />
-                    </AvatarWrapper>
-                    <InstructorName>Arnold</InstructorName>
-                </Instructor>
-                <ActionsElement>
-                    <ReservationButton>přihlásit</ReservationButton>
-                </ActionsElement>
-            </ContentBody>
-        </ContentWrapper>
-    </Wrapper>
-);
+interface WorkoutProps extends Calendar {
+ // TODO: selector pro cool data
+}
+const Workout:React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, note, carts }) => {
+    const workout = carts[0];
+    const workoutImageSrc = workout.pictureUrl || placeholder;
+    return (
+        <Wrapper>
+            <ImageWrapper>
+                <WorkoutImage src={workoutImageSrc} alt="placeholder" />
+            </ImageWrapper>
+            <ContentWrapper>
+                <ContentHeading>
+                    <DateElement>Pondělí 25.1 17:00</DateElement>
+                    <GreenText>
+                        {duration}
+                        &nbsp;min
+                    </GreenText>
+                    <GreenText>
+                        Cena:&nbsp;
+                        {carts[0].priceVat}
+                        &nbsp;Kč
+                    </GreenText>
+                    <Occupancy current={capacityBooked} max={capacity} />
+                </ContentHeading>
+                <ContentBody>
+                    <Information>
+                        <h3>{workout.name}</h3>
+                        <span>{workout.name}</span>
+                        {note ? (<Note>{note}</Note>) : null}
+                    </Information>
+                    <Instructor>
+                        <AvatarWrapper>
+                            <Avatar src={profile} alt="Profil" />
+                        </AvatarWrapper>
+                        <InstructorName>Arnold</InstructorName>
+                    </Instructor>
+                    <ActionsElement>
+                        <ReservationButton>přihlásit</ReservationButton>
+                    </ActionsElement>
+                </ContentBody>
+            </ContentWrapper>
+        </Wrapper>
+    );
+};
 
-export default Workout;
+const withWorkoutData = withSelectorProps(getCalendarById);
+
+export default withWorkoutData(Workout);
 
 const AvatarWrapper = styled.div`
     max-width: 50px;

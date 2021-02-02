@@ -30,10 +30,10 @@ export const withStoreProps = (path: string | string[], key?: string) => <P, >(C
 });
 
 // eslint-disable-next-line no-unused-vars
-type Selector = (applicationState: ApplicationState) => any;
+type Selector = (applicationState: ApplicationState, props: any) => any;
 
 export const withSelectorProps = (selector: Selector, key?: string) => <P, >(Component: ComponentType<P & WithApplicationState>): ComponentType<P> => withStoreContext(({ applicationState, ...props }) => {
-    const pathProp = selector(getProp(applicationState, 'applicationState'));
+    const pathProp = selector(getProp(applicationState, 'applicationState'), props);
     const componentProps = props as unknown as P;
     const newProps = key
         ? { [key]: pathProp }
