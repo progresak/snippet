@@ -1,11 +1,27 @@
 import React from 'react';
-// import styled from 'styled-components';
 import DayItem from './components/DayItem/DayItem';
+import { withStoreProps } from '../withStateContext';
+import { Calendar } from '../../../types';
 
-const DayList = () => (
-    <>
-        <DayItem />
-        <DayItem />
-    </>
-);
-export default DayList;
+interface DayListProps {
+    calendars: Calendar[];
+}
+
+const renderDayItem = ({ id, ...calendar }: Calendar) => <DayItem key={id} {...calendar} />;
+const renderItems = (calendars: Calendar[]) => calendars.map(renderDayItem);
+
+const DayList: React.FC<DayListProps> = ({ calendars }) => {
+    if (!calendars) {
+        return (<span>Loading...</span>); // todo: spinner
+    }
+
+    return (
+        <>
+            {renderItems(calendars)}
+        </>
+    );
+};
+
+const withListData = withStoreProps(['baseData', 'calendars'], 'calendars');
+
+export default withListData(DayList);

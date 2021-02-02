@@ -3,13 +3,21 @@ import styled from 'styled-components';
 import { Workout } from './components';
 import EmptyDay from '../EmptyDay';
 import CalendarImage from '../../../../images/calendar.svg';
+import { Calendar } from '../../../../../types';
 
-const DayItem = () => (
+type DayItemProps = Calendar;
+
+// group by same date
+
+const DayItem: React.FC<DayItemProps> = ({ from }) => (
     <Wrapper>
         <TitleElement>
             <CalendarIcon src={CalendarImage} alt="Pondělí" />
             &nbsp;
-            <span>Pondělí 25.1.2021</span>
+            <span>
+                Pondělí
+                {from}
+            </span>
         </TitleElement>
         <WorkoutsWrapper>
             <Workout />

@@ -2,30 +2,42 @@ import React from 'react';
 import styled from 'styled-components';
 import myFoxLogo from '../../images/logo_myfox.svg';
 import { SmallLogo } from '../../common';
+import { withStoreProps } from '../../common/withStateContext';
 
-export const Footer: React.FC = () => (
+interface FooterProps {
+    title: string;
+}
+export const Footer: React.FC<FooterProps> = ({ title }) => (
     <FooterElement>
         <FooterContent>
-            <span>Harmony Body Fitness</span>
+            <span>{title}</span>
             <Copyright>
                 <SmallLogo />
                 &nbsp;rezervační systém my
                 <strong>Fox</strong>
                 {' '}
-                &copy; www.myFox.cz
+                &copy;
+                {' '}
+                <Link href="https://www.myfox.cz">www.myFox.cz</Link>
             </Copyright>
         </FooterContent>
         <MyFoxLogo src={myFoxLogo} />
     </FooterElement>
 );
 
-export default Footer;
+const withFooterData = withStoreProps(['subjectData', 'name'], 'title');
+
+export default withFooterData(Footer);
 
 /* Styled components */
 
 const MyFoxLogo = styled.img`
   width: 40px;
   align-self: end;
+`;
+const Link = styled.a`
+    text-decoration: none;
+    color: #acacac;
 `;
 
 const FooterElement = styled.div`
