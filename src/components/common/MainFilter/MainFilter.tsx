@@ -24,4 +24,5 @@ const FiltersWrapper = styled.div`
 
 const MainFilterWrapper = styled.div`
   text-align: center; // TODO?
+  margin: 20px 0;
 `;

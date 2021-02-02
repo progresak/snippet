@@ -1,11 +1,12 @@
 import React from 'react';
-import { MainFilter } from '../common';
+import { DayList, MainFilter } from '../common';
 
 interface Props {
 }
 const Dashboard: React.FC<Props> = () => (
     <div>
         <MainFilter />
+        <DayList />
     </div>
 );
 
