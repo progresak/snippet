@@ -1,3 +1,5 @@
+export * from './dates';
+
 const getPath = (path: string | string[]): string => {
     const pathArray = Array.isArray(path) ? path : path.split('.').filter((key) => key);
     const pathArrayFlat = pathArray.flatMap((part) => (typeof part === 'string' ? part.split('.') : part));

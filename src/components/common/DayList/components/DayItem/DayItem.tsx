@@ -10,6 +10,14 @@ interface DayItemProps {
     calendarIds: (WithId & {dateKey: string})[];
 }
 
+const renderWorkouts = (ids:WithId[]) => {
+    if (!ids.length) {
+        return <EmptyDay />;
+    }
+
+    return ids.map(({ id }) => <Workout id={id} key={id} />);
+};
+
 const DayItem: React.FC<DayItemProps> = ({ date, calendarIds }) => (
     <Wrapper>
         <TitleElement>
@@ -17,13 +25,11 @@ const DayItem: React.FC<DayItemProps> = ({ date, calendarIds }) => (
             &nbsp;
             <span>
                 {date}
-                {/* // TODO: to date format */}
             </span>
         </TitleElement>
         <WorkoutsWrapper>
-            {calendarIds.map(({ id }) => <Workout id={id} key={id} />)}
+            {renderWorkouts(calendarIds)}
         </WorkoutsWrapper>
-        <EmptyDay />
     </Wrapper>
 );
 

@@ -1,26 +1,67 @@
 import React from 'react';
 import styled from 'styled-components';
-import placeholder from '../../../../../images/running.png';
-import profile from '../../../../../images/profile.png';
+import placeholder from '../../../../../images/running.svg';
+import profilePlaceholder from '../../../../../images/user.svg';
 import Occupancy from './Occupancy';
 import { withSelectorProps } from '../../../../withStateContext';
 import { getCalendarById } from '../../../../../../selectors';
-import { Calendar } from '../../../../../../types';
+import { Calendar, Employee } from '../../../../../../types';
+import { getDisplayDateWithDayName } from '../../../../../../utils';
+import { GreenCheckmark } from '../../../../imageComponents';
 
 interface WorkoutProps extends Calendar {
- // TODO: selector pro cool data
+    dateFrom: Date;
+    signedIn: boolean;
 }
-const Workout:React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, note, carts }) => {
+
+const renderInstructor = ({ userMyFox }: Employee) => {
+    const { name, surname, pictureUrl } = userMyFox;
+    const isPlaceholder = !pictureUrl;
+    const instructorImageSrc = isPlaceholder ? profilePlaceholder : pictureUrl;
+    const instructorName = `${name} ${surname}`;
+
+    return (
+        <Instructor>
+            <AvatarWrapper>
+                <Avatar src={instructorImageSrc} alt={instructorName} />
+            </AvatarWrapper>
+            <InstructorName>{instructorName}</InstructorName>
+        </Instructor>
+    );
+};
+
+const Workout: React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, note, carts, employees, dateFrom, signedIn }) => {
     const workout = carts[0];
-    const workoutImageSrc = workout.pictureUrl || placeholder;
+    const instructor = employees[0];
+    const isPlaceholder = !workout.pictureUrl;
+    const workoutImageSrc = isPlaceholder ? placeholder : workout.pictureUrl;
+
+    const isWorkoutFull = (capacityBooked >= capacity);
+    const actionElement = signedIn
+        ? (
+            <SignedWrapper>
+                <CheckMarkWrapper>
+                    <GreenCheckmark />
+                </CheckMarkWrapper>
+                <MarkLabel>
+                    přihlášeno
+                </MarkLabel>
+            </SignedWrapper>
+        )
+        : (
+            <ReservationButton disabled={isWorkoutFull}>
+                přihlásit
+            </ReservationButton>
+        );
+
     return (
         <Wrapper>
-            <ImageWrapper>
+            <ImageWrapper isPlaceholder={isPlaceholder}>
                 <WorkoutImage src={workoutImageSrc} alt="placeholder" />
             </ImageWrapper>
             <ContentWrapper>
                 <ContentHeading>
-                    <DateElement>Pondělí 25.1 17:00</DateElement>
+                    <DateElement>{getDisplayDateWithDayName(dateFrom)}</DateElement>
                     <GreenText>
                         {duration}
                         &nbsp;min
@@ -38,14 +79,9 @@ const Workout:React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, no
                         <span>{workout.name}</span>
                         {note ? (<Note>{note}</Note>) : null}
                     </Information>
-                    <Instructor>
-                        <AvatarWrapper>
-                            <Avatar src={profile} alt="Profil" />
-                        </AvatarWrapper>
-                        <InstructorName>Arnold</InstructorName>
-                    </Instructor>
+                    {renderInstructor(instructor)}
                     <ActionsElement>
-                        <ReservationButton>přihlásit</ReservationButton>
+                        {actionElement}
                     </ActionsElement>
                 </ContentBody>
             </ContentWrapper>
@@ -65,12 +101,26 @@ const AvatarWrapper = styled.div`
 `;
 
 const Avatar = styled.img`
-    width: 90%;
+    width: 100%;
     border-radius: 100px;
 `;
 const InstructorName = styled.span`
   color: #595959;
   font-size: 14px;
+`;
+
+const CheckMarkWrapper = styled.div`
+    width: 25px;
+    margin-bottom: 5px;
+`;
+const SignedWrapper = styled.div`
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+`;
+const MarkLabel = styled.span`
+    color: #6cb91c;
 `;
 
 const ReservationButton = styled.button`
@@ -96,15 +146,19 @@ const Wrapper = styled.div`
 `;
 
 const WorkoutImage = styled.img`
-    width: 80%;
+    width: 100%;
+    height: 100%;
 `;
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.div<{ isPlaceholder: boolean }>`
     max-width: 120px;
-    min-height: 120px;
+    min-width: 100px;
+    min-height: 100px;
     border-right: 4px solid #6bb91c;
-    background: #b4b4b4;
     text-align: center;
+    
+    ${({ isPlaceholder }) => isPlaceholder && 'background: #b4b4b4;'}
+    ${({ isPlaceholder }) => isPlaceholder && 'border-right: 4px solid #595959;'}
 `;
 
 const ContentWrapper = styled.div`
@@ -132,9 +186,10 @@ const GreenText = styled.span`
 `;
 const ContentBody = styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     height: 100%;
     align-items: center;
+    padding: 0 10px;
 `;
 const Information = styled.div`
     font-size: 22px;
@@ -142,6 +197,7 @@ const Information = styled.div`
     flex-direction: column;
     justify-content: center;
     height: 100%;
+    min-width: 40%;
     &> span {
      font-size: 15px;
       margin-top: 10px;
@@ -157,5 +213,6 @@ const Instructor = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 `;
 const ActionsElement = styled.div``;
