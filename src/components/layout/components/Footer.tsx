@@ -7,6 +7,7 @@ import { withStoreProps } from '../../common/withStateContext';
 interface FooterProps {
     title: string;
 }
+
 export const Footer: React.FC<FooterProps> = ({ title }) => (
     <FooterElement>
         <FooterContent>

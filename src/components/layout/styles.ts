@@ -19,12 +19,19 @@ export const TopLine = styled.div`
     height: 4px;
 `;
 
-export const PageWrapper = styled.div`
+export const PageBackground = styled.div`
   background-color: black;
-  background-image: url(${backgroundImage});
+  background-image: url(${`./${backgroundImage}`});
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  position: fixed;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+`;
+
+export const PageWrapper = styled.div`
   width: 100%;
   position: absolute;
 `;
