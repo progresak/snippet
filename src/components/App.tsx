@@ -23,7 +23,7 @@ class App extends Component<Props, WithApplicationState> {
             applicationState: {
                 apiConfiguration: props.configuration,
                 meta: {
-                    isModalOpen: true,
+                    isModalOpen: false,
                     reservationWorkoutId: undefined,
                 },
             },

@@ -15,7 +15,12 @@ export interface ApplicationState {
     baseData: FetchBaseResponse;
     subjectData: FetchSubjectDataResponse;
 }
-
+export interface FormData {
+    name: string;
+    surname: string;
+    phone: string;
+    email: string;
+}
 export interface WithApplicationState {
     applicationState: ApplicationState;
     setApplicationState: (t:any) => void;

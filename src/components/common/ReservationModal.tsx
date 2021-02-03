@@ -1,45 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal/Modal';
 import { withActionProps, withSelectorProps } from './withStateContext';
 import { compose } from '../../utils';
 import { isModalOpened } from '../../selectors';
-import { closeModal as closeModalAction } from '../../actions/state';
+import { closeModal as closeModalAction, reFetchBaseData, sendReservation } from '../../actions/state';
 import { ProfilePlaceholder } from './imageComponents';
 import Button from './Button';
+import { CreateReservationErrorResponse, CreateReservationResponse, CreateReservationSuccessResponse } from '../../actions';
+import { FormData } from '../../types';
 
 interface ReservationModalProps {
     isOpened: boolean;
     closeModal: () => void;
+    reserveWorkout: (formData: FormData) => Promise<CreateReservationResponse>;
+    refetch: () => void;
 }
+const isErrorResponse = (res: CreateReservationResponse): res is CreateReservationErrorResponse => res?.error;
+const isSuccesResponse = (res: CreateReservationResponse): res is CreateReservationSuccessResponse => res?.message;
+const initFormState = {
+    name: '',
+    surname: '',
+    email: '',
+    phone: '',
+};
+const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch }) => {
+    const [formData, setFormData] = useState<FormData>(initFormState);
 
-const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal }) => (
-    <Modal isActive={isOpened} onClose={() => closeModal()} portalContainerId="modal">
-        <ContentWrapper>
-            <AvatarWrapper>
-                <ProfilePlaceholder />
-            </AvatarWrapper>
-            <Title>Pro dokončení rezervace zadejte své kontaktní údaje:</Title>
-            <InputsWrapper>
-                <Input placeholder="Jméno" />
-                <Input placeholder="Příjmení" />
-                <Break />
-                <Input placeholder="Váš e-mail" />
-                <Input placeholder="Mobil" />
-            </InputsWrapper>
-            <ButtonsWrapper>
-                <Button variant="secondary" onClick={() => closeModal()}>Zrušit</Button>
-                <Button onClick={() => console.log('PEKCJA')}>Ok</Button>
-            </ButtonsWrapper>
+    const handleOnSubmit = (e) => {
+        e.preventDefault();
+        reserveWorkout(formData).then((response) => {
+            if (isErrorResponse(response)) {
+                console.error(' There is an error occured');
+            }
+            if (isSuccesResponse(response)) {
+                refetch();
+                closeModal();
+                setFormData(initFormState);
+            }
+        });
+    };
 
-        </ContentWrapper>
-    </Modal>
-);
+    const { name, surname, email, phone } = formData;
+
+    const handleOnChange = (key: string) => (e) => {
+        const { value } = e.target;
+        setFormData({ ...formData, [key]: value });
+    };
+
+    return (
+        <Modal isActive={isOpened} onClose={closeModal} portalContainerId="modal">
+            <ContentWrapper>
+                <AvatarWrapper>
+                    <ProfilePlaceholder />
+                </AvatarWrapper>
+                <Title>Pro dokončení rezervace zadejte své kontaktní údaje:</Title>
+                <form onSubmit={handleOnSubmit}>
+                    <InputsWrapper>
+
+                        <Input value={name} onChange={handleOnChange('name')} placeholder="Jméno" />
+                        <Input value={surname} onChange={handleOnChange('surname')} placeholder="Příjmení" />
+                        <Break />
+                        <Input value={email} onChange={handleOnChange('email')} type="email" placeholder="Váš e-mail" />
+                        <Input value={phone} onChange={handleOnChange('phone')} placeholder="Mobil" />
+
+                    </InputsWrapper>
+                    <ButtonsWrapper>
+                        <Button variant="secondary" onClick={closeModal}>Zrušit</Button>
+                        <Button onClick={handleOnSubmit}>Ok</Button>
+                    </ButtonsWrapper>
+                </form>
+            </ContentWrapper>
+        </Modal>
+    );
+};
 
 const withModalData = compose(
     withSelectorProps(isModalOpened, 'isOpened'),
 
     withActionProps(closeModalAction, 'closeModal'),
+    withActionProps(sendReservation, 'reserveWorkout'),
+    withActionProps(reFetchBaseData, 'refetch'),
 );
 
 export default withModalData(ReservationModal);

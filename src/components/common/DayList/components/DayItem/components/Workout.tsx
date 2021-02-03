@@ -216,10 +216,12 @@ const Note = styled.div`
     font-weight: bold;
     margin-top:10px;
 `;
+
 const Instructor = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 `;
+
 const ActionsElement = styled.div``;
