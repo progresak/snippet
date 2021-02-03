@@ -10,16 +10,22 @@ interface FilterSelectBoxProps {
     defaultName: string;
     options: Option[];
     selectedId?: string;
+    handleOnChange: (id: string) => void;
 }
-// TODO: FIX FILTER
-export const FilterSelectBox: React.FC<FilterSelectBoxProps> = ({ options, defaultName, selectedId }) => (
-    <SelectInput name={defaultName}>
-        <option key={`${defaultName}-default`} value={undefined}>{defaultName}</option>
-        {options.map(({ id, label }) => (
-            <option key={id} value={id} selected={selectedId === id}>{label}</option>
-        ))}
-    </SelectInput>
-);
+
+export const FilterSelectBox: React.FC<FilterSelectBoxProps> = ({ options, defaultName, handleOnChange, selectedId }) => {
+    const handleChange = (event: any) => {
+        handleOnChange(event.target.value);
+    };
+    return (
+        <SelectInput value={selectedId} onChange={handleChange}>
+            <option key={`${defaultName}-default`} value="">{defaultName}</option>
+            {options.map(({ id, label }) => (
+                <option key={id} value={id}>{label}</option>
+            ))}
+        </SelectInput>
+    );
+};
 
 export default FilterSelectBox;
 

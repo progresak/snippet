@@ -3,15 +3,17 @@ import styled from 'styled-components';
 import placeholder from '../../../../../images/running.svg';
 import profilePlaceholder from '../../../../../images/user.svg';
 import Occupancy from './Occupancy';
-import { withSelectorProps } from '../../../../withStateContext';
+import { withActionProps, withSelectorProps } from '../../../../withStateContext';
 import { getCalendarById } from '../../../../../../selectors';
 import { Calendar, Employee } from '../../../../../../types';
-import { getDisplayDateWithDayName } from '../../../../../../utils';
+import { compose, getDisplayDateWithDayName } from '../../../../../../utils';
 import { GreenCheckmark } from '../../../../imageComponents';
+import { openModalWithId } from '../../../../../../actions/state';
 
 interface WorkoutProps extends Calendar {
     dateFrom: Date;
     signedIn: boolean;
+    openModal: (workoutId: string) => boolean;
 }
 
 const renderInstructor = ({ userMyFox }: Employee) => {
@@ -30,11 +32,13 @@ const renderInstructor = ({ userMyFox }: Employee) => {
     );
 };
 
-const Workout: React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, note, carts, employees, dateFrom, signedIn }) => {
+const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capacity, duration, note, carts, employees, dateFrom, signedIn }) => {
     const workout = carts[0];
     const instructor = employees[0];
     const isPlaceholder = !workout.pictureUrl;
     const workoutImageSrc = isPlaceholder ? placeholder : workout.pictureUrl;
+
+    const openReservationModal = () => openModal(id);
 
     const isWorkoutFull = (capacityBooked >= capacity);
     const actionElement = signedIn
@@ -49,7 +53,7 @@ const Workout: React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, n
             </SignedWrapper>
         )
         : (
-            <ReservationButton disabled={isWorkoutFull}>
+            <ReservationButton disabled={isWorkoutFull} onClick={openReservationModal}>
                 přihlásit
             </ReservationButton>
         );
@@ -89,7 +93,10 @@ const Workout: React.FC<WorkoutProps> = ({ capacityBooked, capacity, duration, n
     );
 };
 
-const withWorkoutData = withSelectorProps(getCalendarById);
+const withWorkoutData = compose(
+    withSelectorProps(getCalendarById),
+    withActionProps(openModalWithId, 'openModal'),
+);
 
 export default withWorkoutData(Workout);
 

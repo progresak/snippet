@@ -39,6 +39,10 @@ module.exports = {
         'react/prop-types': 'off',
         'import/prefer-default-export': ['off'],
         'react/prefer-stateless-function': 'off',
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+        ],
         'import/extensions': [
             'error',
             'ignorePackages',

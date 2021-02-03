@@ -5,9 +5,12 @@ import userIcon from '../../images/user.svg';
 
 interface ImageProps {
     alt?: string;
+    color?: string;
 }
 
 export const GreenCheckmark: React.FC<ImageProps> = ({ alt = 'green check mark' }) => <Image src={checkbox} alt={alt} />;
-export const ProfilePlaceholder: React.FC<ImageProps> = ({ alt = 'green check mark' }) => <Image src={userIcon} alt={alt} />;
+export const ProfilePlaceholder: React.FC<ImageProps> = ({ alt = 'avatar' }) => <Image src={userIcon} alt={alt} />;
 
-const Image = styled.img``;
+const Image = styled.img`
+   width: 100%;
+`;

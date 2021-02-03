@@ -25,7 +25,6 @@ export const PageWrapper = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100%;
   width: 100%;
   position: absolute;
 `;

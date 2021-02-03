@@ -1,4 +1,4 @@
-import { Address, Calendar, FetchBaseResponse, FetchSubjectDataResponse, MyFoxInstance, MyFoxMicroSite } from '../types';
+import { FetchBaseResponse, FetchSubjectDataResponse } from '../types';
 
 // const subjectAlias = 'rpsii';
 // const shopId = 'ckc8qkw3shoxb0a83yhqp3rsv'; // dynamicly from config

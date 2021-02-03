@@ -6,6 +6,11 @@ export interface ApplicationState {
         isInitialized: boolean;
         isModalOpen: boolean;
         isFetching: boolean;
+        reservationWorkoutId?: string;
+    }
+    filter: {
+        selectedWorkoutId: string | undefined,
+        selectedLectorId: string | undefined,
     }
     baseData: FetchBaseResponse;
     subjectData: FetchSubjectDataResponse;
@@ -13,6 +18,7 @@ export interface ApplicationState {
 
 export interface WithApplicationState {
     applicationState: ApplicationState;
+    setApplicationState: (t:any) => void;
 }
 
 export interface Address {

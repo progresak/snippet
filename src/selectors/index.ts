@@ -9,6 +9,10 @@ export const getUniqueInstructors = (state: ApplicationState) => {
     }
     return [];
 };
+export const getSelectedWorkoutFilterId = (state:ApplicationState) => state?.filter?.selectedWorkoutId;
+export const getSelectedLectorFilterId = (state:ApplicationState) => state?.filter?.selectedLectorId;
+
+export const isModalOpened = (state:ApplicationState) => !!state?.meta?.isModalOpen;
 
 export const getUniqueWorkouts = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;
@@ -37,8 +41,22 @@ export const getCalendarById = (state: ApplicationState, { id }: WithId) => {
     return { ...calendar, dateFrom };
 };
 
-export const getGroupedCalendarsByDate = (state: ApplicationState) => {
+export const getFilteredCalendars = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;
+    const lectorId = state?.filter?.selectedLectorId;
+    const workoutId = state?.filter?.selectedWorkoutId;
+
+    if (!calendars) {
+        return [];
+    }
+
+    return calendars
+        .filter(({ employees }) => (!lectorId || employees[0]?.userMyFox?.id === lectorId))
+        .filter(({ id }) => (!workoutId || id === workoutId));
+};
+
+export const getGroupedCalendarsByDate = (state: ApplicationState) => {
+    const calendars = getFilteredCalendars(state);
     const idsWithDateKeys = calendars?.map(({ id, from }) => {
         const dateFrom = new Date(from);
         const dateKey = getDisplayDateWithDayName(dateFrom);

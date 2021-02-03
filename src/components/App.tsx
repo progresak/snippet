@@ -4,6 +4,7 @@ import Dashboard from './views/Dashboard';
 import StoreContext from '../providers/StoreContext';
 import { SnippetConfiguration, WithApplicationState } from '../types';
 import { fetchBase, fetchSubjectData } from '../actions';
+import { ReservationModal } from './common';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars
@@ -21,10 +22,11 @@ class App extends Component<Props, WithApplicationState> {
             // @ts-ignore
             applicationState: {
                 apiConfiguration: props.configuration,
+                meta: {
+                    isModalOpen: true,
+                    reservationWorkoutId: undefined,
+                },
             },
-            // isModalOpen: false,
-            // isFetching: false,
-            // isInitialized: false,
         };
     }
 
@@ -46,9 +48,9 @@ class App extends Component<Props, WithApplicationState> {
     }
 
     setAppState = <T, >(obj: T) => {
-        const { applicationState: previousApplicationState } = this.state;
-
-        this.setState({ applicationState: { ...previousApplicationState, ...obj } });
+        const { applicationState: previousApplicationState, ...other } = this.state;
+        console.log({ previousApplicationState, obj });
+        this.setState({ applicationState: { ...previousApplicationState, ...obj }, ...other });
     }
 
     render() {
@@ -59,12 +61,14 @@ class App extends Component<Props, WithApplicationState> {
         }
 
         return (
-            <StoreContext.Provider value={{ applicationState: this.state }}>
+            <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState }}>
                 <Layout>
                     <Suspense fallback={Loader}>
                         <Dashboard />
                     </Suspense>
                 </Layout>
+                <ReservationModal />
+                <div id="modal" />
             </StoreContext.Provider>
         );
     }
