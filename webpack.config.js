@@ -12,7 +12,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, '/dist'),
         publicPath: '/',
-        filename: 'bundle.min.js',
+        filename: '[name].[contenthash].js',
     },
     devServer: {
         historyApiFallback: {
@@ -73,7 +73,10 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
+            publicPath: './',
             template: './public/index.html',
+            minify: true,
+            inject: 'head',
         }),
     ],
 };
