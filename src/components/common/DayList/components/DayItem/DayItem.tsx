@@ -60,10 +60,15 @@ const TitleElement = styled.div`
   
   @media ${device.compact} {
     border-radius: 0;
+    font-size: 22px;
+    padding: 7px 0;
   }
 `;
 
 const CalendarIcon = styled.img`
     height:13px;
     transform: translateY(1px);
+  @media ${device.compact} {
+    height:20px;
+  }
 `;

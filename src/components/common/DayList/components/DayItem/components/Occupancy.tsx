@@ -1,14 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import { device } from '../../../../../layout/global/mediaQueries';
 
 interface OccupancyProps {
     max: number;
     current: number;
+    newLine?: boolean;
 }
 
-const Occupancy: React.FC<OccupancyProps> = ({ max, current }) => (
+const Occupancy: React.FC<OccupancyProps> = ({ max, current, newLine = false }) => (
     <Wrapper>
         <span>Obsazeno:&nbsp;</span>
+        {newLine ? <br /> : null}
         <ColoredCount isFull={max === current}>{current}</ColoredCount>
         <From>
             &nbsp;/&nbsp;
@@ -21,6 +24,11 @@ export default Occupancy;
 
 const Wrapper = styled.div`
     font-size: 14px;
+    text-align: center;
+    @media ${device.compact} {
+      line-height: 20px;
+      font-size: 17px;
+  }
 `;
 
 const From = styled.span`
