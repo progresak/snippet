@@ -24,15 +24,19 @@ export const fetchSubjectData = async ({ serverUrl, subjectAlias }: WithServerUr
 
 export interface CreateReservationProps extends FormData {
     calendarId: string;
+    customerId?: string;
     capacity: number;
     note: string;
 }
 export interface CreateReservationSuccessResponse {
     message: string;
     capacity: number;
+    customerId: string;
 }
+
 export interface CreateReservationErrorResponse {
     error: string;
 }
+
 export type CreateReservationResponse = CreateReservationSuccessResponse | CreateReservationErrorResponse;
 export const createReservation = async ({ serverUrl }: WithServerUrl, props: CreateReservationProps) => getHttp<CreateReservationResponse>(getReserveUrl({ serverUrl }), 'post', props);

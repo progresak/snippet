@@ -5,6 +5,8 @@ import StoreContext from '../providers/StoreContext';
 import { SnippetConfiguration, WithApplicationState } from '../types';
 import { fetchBase, fetchSubjectData } from '../actions';
 import { ReservationModal } from './common';
+import { getCookie } from '../utils/cookies';
+import { Loader } from './layout/components';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars
@@ -12,8 +14,6 @@ interface Props {
     isInitialized: boolean;
     configuration: SnippetConfiguration;
 }
-
-const Loader = <h1>LOADING ...</h1>;
 
 class App extends Component<Props, WithApplicationState> {
     constructor(props: Props) {
@@ -23,6 +23,7 @@ class App extends Component<Props, WithApplicationState> {
             applicationState: {
                 apiConfiguration: props.configuration,
                 meta: {
+                    isFetching: true,
                     isModalOpen: false,
                     reservationWorkoutId: undefined,
                 },
@@ -33,13 +34,13 @@ class App extends Component<Props, WithApplicationState> {
     componentDidMount = async () => {
         const { configuration } = this.props;
 
-        const baseData = await fetchBase(configuration);
-        const subjectData = await fetchSubjectData(configuration);
-        this.setAppState({ baseData, subjectData }); // TODO: fix structure of data
+        const baseDataP = fetchBase(configuration);
+        const subjectDataP = fetchSubjectData(configuration);
+        const cookie = getCookie('customerData');
 
-        const { applicationState } = this.state;
-        // eslint-disable-next-line no-console
-        console.log(applicationState);
+        Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
+            this.setAppState({ baseData, subjectData, cookie, meta: { isFetching: false } }); // TODO: fix structure of data
+        });
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -49,7 +50,7 @@ class App extends Component<Props, WithApplicationState> {
 
     setAppState = <T, >(obj: T) => {
         const { applicationState: previousApplicationState, ...other } = this.state;
-        console.log({ previousApplicationState, obj });
+        console.log("DEBUG", { previousApplicationState, obj });
         this.setState({ applicationState: { ...previousApplicationState, ...obj }, ...other });
     }
 
@@ -57,16 +58,17 @@ class App extends Component<Props, WithApplicationState> {
         const { isInitialized } = this.props;
 
         if (!isInitialized) {
-            return Loader;
+            return <Loader />;
         }
 
         return (
             <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState }}>
                 <Layout>
-                    <Suspense fallback={Loader}>
+                    <Suspense fallback={<Loader />}>
                         <Dashboard />
                     </Suspense>
                 </Layout>
+                <Loader />
                 <ReservationModal />
                 <div id="modal" />
             </StoreContext.Provider>

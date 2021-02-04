@@ -4,6 +4,7 @@ import ResetStyle from './global/ResetStyle';
 import GlobalStyle from './global/GlobalStyle';
 import { PageWrapper, Content, Container, TopLine, PageBackground } from './styles';
 import { Header, Footer } from './components';
+import { LoginComponent } from '../common';
 
 const Layout: React.FC = ({ children }) => (
     <>
@@ -15,10 +16,11 @@ const Layout: React.FC = ({ children }) => (
                 <TopLine />
                 <Container>
                     <Header />
+                    <LoginComponent />
                     <Content>
                         {children}
                     </Content>
-                    <Footer  />
+                    <Footer />
                 </Container>
             </PageWrapper>
         </ErrorBoundary>

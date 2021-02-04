@@ -14,6 +14,7 @@ export interface ApplicationState {
     }
     baseData: FetchBaseResponse;
     subjectData: FetchSubjectDataResponse;
+    cookie: SignInCookieFormat | {};
 }
 export interface FormData {
     name: string;
@@ -135,4 +136,8 @@ export interface FetchBaseResponse {
 
 export interface WithId {
     id: string;
+}
+export interface SignInCookieFormat extends FormData {
+    customerId: string;
+    calendarIds: string[];
 }

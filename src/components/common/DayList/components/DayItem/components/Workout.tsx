@@ -80,7 +80,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                 <ContentBody>
                     <Information>
                         <h3>{workout.name}</h3>
-                        <span>{workout.name}</span>
+                        <span>{workout.note}</span>
                         {note ? (<Note>{note}</Note>) : null}
                     </Information>
                     {renderInstructor(instructor)}
@@ -140,6 +140,7 @@ const ReservationButton = styled.button`
       cursor: pointer;
   
       ${({ disabled }) => disabled && 'background: #b7b7b7;'}
+      ${({ disabled }) => disabled && 'border-color: #c4c4c4;'}
       ${({ disabled }) => disabled && 'cursor: auto;'}
 `;
 

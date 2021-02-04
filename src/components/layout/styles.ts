@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import backgroundImage from '../images/background.jpg';
 
 export const Content = styled.div`
-  box-shadow: 0 0 2px 0 #000000;
   padding: 25px;
 `;
 

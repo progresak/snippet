@@ -2,29 +2,32 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal/Modal';
 import { withActionProps, withSelectorProps } from './withStateContext';
-import { compose } from '../../utils';
+import { compose, uniqueArrayOfObjects } from '../../utils';
 import { isModalOpened } from '../../selectors';
-import { closeModal as closeModalAction, reFetchBaseData, sendReservation } from '../../actions/state';
+import { closeModal as closeModalAction, reFetchBaseData, sendReservation, SendReservationResponse, setLoginCookie } from '../../actions/state';
 import { ProfilePlaceholder } from './imageComponents';
 import Button from './Button';
-import { CreateReservationErrorResponse, CreateReservationResponse, CreateReservationSuccessResponse } from '../../actions';
-import { FormData } from '../../types';
+import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
+import { FormData, SignInCookieFormat } from '../../types';
+import { getCookie, setCookie } from '../../utils/cookies';
 
 interface ReservationModalProps {
     isOpened: boolean;
     closeModal: () => void;
-    reserveWorkout: (formData: FormData) => Promise<CreateReservationResponse>;
+    reserveWorkout: (formData: FormData) => Promise<SendReservationResponse>;
     refetch: () => void;
+    loginUser: (formData: FormData, customerId: string, calendarId: string) => void;
 }
 const isErrorResponse = (res: CreateReservationResponse): res is CreateReservationErrorResponse => res?.error;
-const isSuccesResponse = (res: CreateReservationResponse): res is CreateReservationSuccessResponse => res?.message;
+// const isSuccesResponse = (res: CreateReservationResponse): res is CreateReservationSuccessResponse => res?.message;
 const initFormState = {
     name: '',
     surname: '',
     email: '',
     phone: '',
 };
-const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch }) => {
+
+const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch, loginUser }) => {
     const [formData, setFormData] = useState<FormData>(initFormState);
 
     const handleOnSubmit = (e) => {
@@ -32,12 +35,15 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
         reserveWorkout(formData).then((response) => {
             if (isErrorResponse(response)) {
                 console.error(' There is an error occured');
+                return;
             }
-            if (isSuccesResponse(response)) {
-                refetch();
-                closeModal();
-                setFormData(initFormState);
-            }
+
+            const { customerId, calendarId } = response;
+            loginUser(formData, customerId, calendarId);
+
+            refetch();
+            closeModal();
+            setFormData(initFormState);
         });
     };
 
@@ -78,6 +84,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
 const withModalData = compose(
     withSelectorProps(isModalOpened, 'isOpened'),
 
+    withActionProps(setLoginCookie, 'loginUser'),
     withActionProps(closeModalAction, 'closeModal'),
     withActionProps(sendReservation, 'reserveWorkout'),
     withActionProps(reFetchBaseData, 'refetch'),
