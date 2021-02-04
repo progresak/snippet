@@ -57,6 +57,7 @@ export const reFetchBaseData = () => async ({ applicationState, setApplicationSt
         const response = await fetchBase({ serverUrl, shopId });
 
         setApplicationState({ ...applicationState, baseData: response, meta: { ...applicationState.meta, isModalOpen: false } });
+        return Promise.resolve();
     }
 };
 
@@ -80,7 +81,6 @@ const getCustomerCookieObj = (userData: FormData, customerId: string, calendarId
 
 export const setLoginCookie = (formData: FormData, customerId: string, calendarId: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
     const cookie = getCustomerCookieObj(formData, customerId, calendarId);
-    console.log({ cookie }, 'HEHE');
-    setApplicationState({ ...applicationState, cookie });
     setCookie('customerData', cookie);
+    setApplicationState({ ...applicationState, cookie, meta: { ...applicationState.meta, isModalOpen: false } });
 };
