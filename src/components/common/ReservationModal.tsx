@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Modal from './Modal/Modal';
 import { withActionProps, withSelectorProps } from './withStateContext';
-import { compose, uniqueArrayOfObjects } from '../../utils';
+import { compose } from '../../utils';
 import { isModalOpened } from '../../selectors';
 import { closeModal as closeModalAction, reFetchBaseData, sendReservation, SendReservationResponse, setLoginCookie } from '../../actions/state';
 import { ProfilePlaceholder } from './imageComponents';
 import Button from './Button';
 import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
-import { FormData, SignInCookieFormat } from '../../types';
-import { getCookie, setCookie } from '../../utils/cookies';
+import { FormData } from '../../types';
 
 interface ReservationModalProps {
     isOpened: boolean;
@@ -19,7 +18,6 @@ interface ReservationModalProps {
     loginUser: (formData: FormData, customerId: string, calendarId: string) => void;
 }
 const isErrorResponse = (res: CreateReservationResponse): res is CreateReservationErrorResponse => res?.error;
-// const isSuccesResponse = (res: CreateReservationResponse): res is CreateReservationSuccessResponse => res?.message;
 const initFormState = {
     name: '',
     surname: '',
@@ -83,7 +81,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
 
 const withModalData = compose(
     withSelectorProps(isModalOpened, 'isOpened'),
-
     withActionProps(setLoginCookie, 'loginUser'),
     withActionProps(closeModalAction, 'closeModal'),
     withActionProps(sendReservation, 'reserveWorkout'),

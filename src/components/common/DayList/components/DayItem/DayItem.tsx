@@ -4,6 +4,7 @@ import { Workout } from './components';
 import EmptyDay from '../EmptyDay';
 import CalendarImage from '../../../../images/calendar.svg';
 import { WithId } from '../../../../../types';
+import { device } from '../../../../layout/global/mediaQueries';
 
 interface DayItemProps {
     date: string,
@@ -37,13 +38,17 @@ export default DayItem;
 
 const Wrapper = styled.div`
   margin-top: 15px;
+    
+  @media ${device.compactMin} {
     &:not(:last-child) {
       margin-bottom: 10px;
     }
+  }
 `;
 
 const WorkoutsWrapper = styled.div`
     margin: 10px 0;
+  
 `;
 
 const TitleElement = styled.div`
@@ -52,6 +57,10 @@ const TitleElement = styled.div`
     font-size: 16px;
     padding: 5px 0;
     text-align: center;
+  
+  @media ${device.compact} {
+    border-radius: 0;
+  }
 `;
 
 const CalendarIcon = styled.img`

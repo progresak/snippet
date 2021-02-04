@@ -7,6 +7,7 @@ import { withActionProps, withSelectorProps } from '../withStateContext';
 import { MyFoxUser } from '../../../types';
 import { compose } from '../../../utils';
 import { setFilterLectorId, setFilterWorkoutId } from '../../../actions/state';
+import { device } from '../../layout/global/mediaQueries';
 
 interface MainFilterProps {
     instructors: MyFoxUser[];
@@ -49,6 +50,10 @@ const FiltersWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
+  @media ${device.compact} {
+    flex-direction: column;
+  }
 `;
 
 const MainFilterWrapper = styled.div`

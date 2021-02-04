@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { device } from '../../../layout/global/mediaQueries';
 
 interface Option {
     id: string;
@@ -39,5 +40,11 @@ const SelectInput = styled.select`
     font-size: 16px;
     border: 1px solid #c4c4c4;
     margin: 0 10px;
-  
+
+  @media ${device.compact} {
+    width: 70%;
+    max-width: initial;
+    text-align: center;
+    margin: 5px;
+  }
 `;

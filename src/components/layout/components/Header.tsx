@@ -23,7 +23,10 @@ export const Header: React.FC<HeaderProps> = ({ logoUrl, title, address }) => {
             </LogoWrapper>
             <TitleWrapper>
                 <SiteTitle>{title}</SiteTitle>
-                <SiteSubTitle>Rezervace na skupinovou lekci</SiteSubTitle>
+                <SiteSubTitle>
+                    Rezervace
+                    <span>na skupinovou lekci</span>
+                </SiteSubTitle>
                 <AddressLabel>{fullAddress}</AddressLabel>
             </TitleWrapper>
             <LanguageWrapper>

@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 import backgroundImage from '../images/background.jpg';
+import { device } from './global/mediaQueries';
 
 export const Content = styled.div`
   padding: 25px;
+  
+  @media ${device.compact} {
+    padding: 0;
+  }
 `;
 
 export const Container = styled.div`

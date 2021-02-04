@@ -9,6 +9,7 @@ import { Calendar, Employee } from '../../../../../../types';
 import { compose, getDisplayDateWithDayName } from '../../../../../../utils';
 import { GreenCheckmark } from '../../../../imageComponents';
 import { openModalWithId } from '../../../../../../actions/state';
+import { device } from '../../../../../layout/global/mediaQueries';
 
 interface WorkoutProps extends Calendar {
     dateFrom: Date;
@@ -145,12 +146,18 @@ const ReservationButton = styled.button`
 `;
 
 const Wrapper = styled.div`
+    display: flex;
+    border-top: 1px solid #acacac;
+    border-bottom: 1px solid #acacac;
+    
+
+  @media ${device.compactMin} {
     border-radius: 5px;
     border: 1px solid #acacac;
-    display: flex;
     &:not(:last-child) {
       margin-bottom: 15px;
     }
+  }
 `;
 
 const WorkoutImage = styled.img`
