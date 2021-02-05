@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import CaffeCup from '../../../images/coffee-cup.svg';
+import { device } from '../../../layout/global/mediaQueries';
 
 const EmptyDay = () => (
     <WrapperElement>
@@ -15,10 +16,12 @@ const EmptyDay = () => (
 export default EmptyDay;
 
 const WrapperElement = styled.div`
-  background: #f0f0f0;
   color: #595959;
-  border: 1px solid #acacac;
-  border-radius: 5px;
+  background: rgb(251,251,251);
+  background: -moz-linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(232,232,232,1) 100%);
+  background: -webkit-linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(232,232,232,1) 100%);
+  background: linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(232,232,232,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfbfb",endColorstr="#e8e8e8",GradientType=1);
   display: flex;
   vertical-align: center;
   flex-direction: column;
@@ -26,6 +29,11 @@ const WrapperElement = styled.div`
   padding: 20px;
   & > span {
     margin-top: 10px;
+  }
+  
+  @media ${device.compactMin} {
+    border: 1px solid #acacac;
+    border-radius: 5px;
   }
 `;
 
