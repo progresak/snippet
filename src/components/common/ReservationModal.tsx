@@ -25,9 +25,24 @@ const initFormState = {
     email: '',
     phone: '',
 };
+const initMeta = {
+    touched: false,
+    valid: false,
+};
+const initFormMetaState = {
+    name: initMeta,
+    surname: initMeta,
+    email: initMeta,
+    phone: initMeta,
+};
+type FormMetaData = Record<keyof FormData, {
+    touched: boolean;
+    valid: boolean;
+}>;
 
 const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch, loginUser, cookie }) => {
     const [formData, setFormData] = useState<FormData>(initFormState);
+    const [formMetaData, setFormMetaData] = useState<FormMetaData>(initFormMetaState);
     useEffect(() => {
         if (undefined === cookie || isEmptyObject(cookie)) {
             return;
@@ -35,9 +50,30 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
         const { calendarIds, customerId, ...cookieFormData } = cookie;
 
         setFormData(cookieFormData);
-    }, [cookie]);
+
+        return () => {
+            setFormMetaData(initFormMetaState);
+            setFormData(initFormState);
+        };
+    }, [cookie, isOpened, cookie]);
+
+    const setFormInvalid = () => {
+        const newObj = {};
+        Object.keys(formData).forEach((key: keyof FormData) => {
+            newObj[key] = { touched: true, valid: !!formData[key] };
+        });
+        setFormMetaData(newObj);
+    };
+    const handleCloseModal = () => {
+        setFormMetaData(initFormMetaState);
+        setFormData(initFormState);
+        closeModal();
+    };
     const handleOnSubmit = (e) => {
         e.preventDefault();
+        if (!formData.name || !formData.surname || !formData.email || !formData.phone) {
+            return setFormInvalid();
+        }
         reserveWorkout(formData).then((response) => {
             if (isErrorResponse(response)) {
                 console.error(' There is an error occured');
@@ -59,10 +95,22 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
     const handleOnChange = (key: string) => (e) => {
         const { value } = e.target;
         setFormData({ ...formData, [key]: value });
+        setFormMetaData({ ...formMetaData, [key]: { touched: true, valid: true } });
     };
 
+    const handleOnBlur = (key: string) => (e) => {
+        const { value } = e.target;
+        const newD = { ...formMetaData, [key]: { touched: true, valid: !!value } };
+        setFormMetaData(newD);
+    };
+    const isInvalid = (key: keyof FormData) => !formMetaData[key].valid && formMetaData[key].touched;
+
+    const isFormInvalid = isInvalid('name') || isInvalid('surname') || isInvalid('email') || isInvalid('phone');
+    if (!isOpened) {
+        return null;
+    }
     return (
-        <Modal isActive={isOpened} onClose={closeModal} portalContainerId="modal">
+        <Modal isActive onClose={handleCloseModal} portalContainerId="modal">
             <ContentWrapper>
                 <AvatarWrapper>
                     <ProfilePlaceholder />
@@ -74,30 +122,56 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                             <IconWrapper>
                                 <UserImg />
                             </IconWrapper>
-                            <Input value={name} onChange={handleOnChange('name')} placeholder="Jméno" />
+                            <Input
+                                value={name}
+                                invalid={isInvalid('name')}
+                                onBlur={handleOnBlur('name')}
+                                onChange={handleOnChange('name')}
+                                placeholder="Jméno"
+                            />
                         </InputWrapper>
                         <InputWrapper>
                             <IconWrapper>
                                 <UserFilledImg />
                             </IconWrapper>
-                            <Input value={surname} onChange={handleOnChange('surname')} placeholder="Příjmení" />
+                            <Input
+                                value={surname}
+                                invalid={isInvalid('surname')}
+                                onBlur={handleOnBlur('surname')}
+                                onChange={handleOnChange('surname')}
+                                placeholder="Příjmení"
+                            />
                         </InputWrapper>
                         <Break />
                         <InputWrapper>
                             <IconWrapper>
                                 <EnvelopeImg />
                             </IconWrapper>
-                            <Input value={email} onChange={handleOnChange('email')} type="email" placeholder="Váš e-mail" />
+                            <Input
+                                value={email}
+                                invalid={isInvalid('email')}
+                                onBlur={handleOnBlur('email')}
+                                onChange={handleOnChange('email')}
+                                type="email"
+                                placeholder="Váš e-mail"
+                            />
                         </InputWrapper>
                         <InputWrapper>
                             <IconWrapper>
                                 <PhoneImg />
                             </IconWrapper>
-                            <Input value={phone} onChange={handleOnChange('phone')} placeholder="Mobil" />
+                            <Input
+                                value={phone}
+                                invalid={isInvalid('phone')}
+                                onBlur={handleOnBlur('phone')}
+                                onChange={handleOnChange('phone')}
+                                placeholder="Mobil"
+                            />
                         </InputWrapper>
                     </InputsWrapper>
+                    {isFormInvalid ? (<span>Vyplňte prosím všechna pole</span>) : null}
                     <ButtonsWrapper>
-                        <Button variant="secondary" onClick={closeModal}>Zrušit</Button>
+                        <Button variant="secondary" onClick={handleCloseModal}>Zrušit</Button>
                         <Button onClick={handleOnSubmit}>Ok</Button>
                     </ButtonsWrapper>
                 </form>
@@ -146,7 +220,7 @@ const IconWrapper = styled.span`
     left: 15px;
     top: 10px;
 `;
-const Input = styled.input`
+const Input = styled.input<{invalid: boolean}>`
   height: 25px;
   border-radius: 5px;
   min-width: 200px;
@@ -154,6 +228,9 @@ const Input = styled.input`
   background: white;
   padding-left: 30px;
   margin: 5px 10px;
+  
+  ${({ invalid }) => invalid && 'border-color: red;'}
+  ${({ invalid }) => invalid && 'box-shadow: 0 0 1px 1px red;'}
 `;
 
 const ContentWrapper = styled.div`

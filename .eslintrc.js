@@ -43,6 +43,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': [
             'error',
         ],
+        'consistent-return': 'off',
         'import/extensions': [
             'error',
             'ignorePackages',
