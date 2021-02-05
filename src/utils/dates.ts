@@ -56,7 +56,7 @@ export const getObjectWithDateKeys = ({ dateFrom, dateTo }: WeekRange, callback:
     const obj = {};
     const timeDiff = dateFrom.getTime() - dateTo.getTime();
 
-    const daysDifference = Math.abs(timeDiff / (1000 * 3600 * 24));
+    const daysDifference = Math.abs(timeDiff / (1000 * 3600 * 24)) + 1;
     times(daysDifference)(() => {
         obj[callback(datePointer)] = [];
         datePointer = new Date(datePointer.setDate(datePointer.getDate() + 1));
