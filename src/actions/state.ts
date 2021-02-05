@@ -1,7 +1,7 @@
 import { FormData, SignInCookieFormat, WithApplicationState } from '../types';
 import { createReservation, CreateReservationProps, CreateReservationSuccessResponse, fetchBase } from './index';
 import { getCookie, logOutCookie, setCookie } from '../utils/cookies';
-import { isEmptyObject, uniqueArray } from '../utils';
+import { getWeekDiffRange, isEmptyObject, uniqueArray } from '../utils';
 
 export const setFilterWorkoutId = (id: string) => ({ applicationState, setApplicationState }:WithApplicationState) => {
     const newState = { ...applicationState, filter: { ...applicationState.filter, selectedWorkoutId: id } };
@@ -83,4 +83,10 @@ export const setLoginCookie = (formData: FormData, customerId: string, calendarI
     const cookie = getCustomerCookieObj(formData, customerId, calendarId);
     setCookie('customerData', cookie);
     setApplicationState({ ...applicationState, cookie, meta: { ...applicationState.meta, isModalOpen: false } });
+};
+
+export const setWeekDiffFilter = (add: boolean = false) => ({ applicationState, setApplicationState }: WithApplicationState) => {
+    const { dateFrom: df, dateTo: dt } = applicationState.filter;
+    const { dateFrom, dateTo } = getWeekDiffRange({ dateFrom: df, dateTo: dt }, add);
+    setApplicationState({ ...applicationState, filter: { ...applicationState.filter, dateFrom, dateTo } });
 };

@@ -11,6 +11,8 @@ export interface ApplicationState {
     filter: {
         selectedWorkoutId: string | undefined,
         selectedLectorId: string | undefined,
+        dateFrom: Date;
+        dateTo: Date;
     }
     baseData: FetchBaseResponse;
     subjectData: FetchSubjectDataResponse;
@@ -24,7 +26,7 @@ export interface FormData {
 }
 export interface WithApplicationState {
     applicationState: ApplicationState;
-    setApplicationState: (t:any) => void;
+    setApplicationState: (t:ApplicationState) => void;
 }
 
 export interface Address {

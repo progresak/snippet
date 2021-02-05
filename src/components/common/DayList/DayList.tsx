@@ -1,7 +1,7 @@
 import React from 'react';
 import DayItem from './components/DayItem/DayItem';
 import { withSelectorProps } from '../withStateContext';
-import { getGroupedCalendarsByDate } from '../../../selectors';
+import { getFullGroupedCalendarsByDate } from '../../../selectors';
 import { WithId } from '../../../types';
 
 interface DayListProps {
@@ -26,6 +26,6 @@ const DayList: React.FC<DayListProps> = ({ days }) => {
     );
 };
 
-const withListData = withSelectorProps(getGroupedCalendarsByDate, 'days');
+const withListData = withSelectorProps(getFullGroupedCalendarsByDate, 'days');
 
 export default withListData(DayList);

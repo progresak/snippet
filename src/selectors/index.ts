@@ -1,5 +1,5 @@
 import { ApplicationState, Cart, MyFoxUser, WithId } from '../types';
-import { findByKey, getDisplayDateWithDayName, groupBy, uniqueArrayOfObjects } from '../utils';
+import { findByKey, getCurrentWeekDateRange, getDisplayDateWithDayName, getObjectWithDateKeys, groupBy, uniqueArrayOfObjects } from '../utils';
 
 export const getUniqueInstructors = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;
@@ -45,6 +45,8 @@ export const getFilteredCalendars = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;
     const lectorId = state?.filter?.selectedLectorId;
     const workoutId = state?.filter?.selectedWorkoutId;
+    const dateTo = state?.filter?.dateTo;
+    const dateFrom = state?.filter?.dateFrom;
 
     if (!calendars) {
         return [];
@@ -52,16 +54,25 @@ export const getFilteredCalendars = (state: ApplicationState) => {
 
     return calendars
         .filter(({ employees }) => (!lectorId || employees[0]?.userMyFox?.id === lectorId))
-        .filter(({ id }) => (!workoutId || id === workoutId));
+        .filter(({ id }) => (!workoutId || id === workoutId))
+        .filter(({ from }) => {
+            const fromDate = new Date(from);
+            return (fromDate >= dateFrom && fromDate < dateTo);
+        });
 };
 
-export const getGroupedCalendarsByDate = (state: ApplicationState) => {
+export const getFullGroupedCalendarsByDate = (state: ApplicationState) => {
     const calendars = getFilteredCalendars(state);
+    const dateTo = state?.filter?.dateTo;
+    const dateFrom = state?.filter?.dateFrom;
+    const emptyDateRange = getObjectWithDateKeys({ dateFrom, dateTo }, getDisplayDateWithDayName);
+    console.log(emptyDateRange );
     const idsWithDateKeys = calendars?.map(({ id, from }) => {
-        const dateFrom = new Date(from);
-        const dateKey = getDisplayDateWithDayName(dateFrom);
+        const fromDate = new Date(from);
+        const dateKey = getDisplayDateWithDayName(fromDate);
         return { id, dateKey };
     });
+    const m = groupBy(idsWithDateKeys, 'dateKey');
 
-    return groupBy(idsWithDateKeys, 'dateKey');
+    return { ...emptyDateRange, ...m };
 };

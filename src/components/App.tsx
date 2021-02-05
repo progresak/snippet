@@ -7,6 +7,7 @@ import { fetchBase, fetchSubjectData } from '../actions';
 import { ReservationModal } from './common';
 import { getCookie } from '../utils/cookies';
 import { Loader } from './layout/components';
+import { getCurrentWeekDateRange } from '../utils';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars
@@ -38,8 +39,10 @@ class App extends Component<Props, WithApplicationState> {
         const subjectDataP = fetchSubjectData(configuration);
         const cookie = getCookie('customerData');
 
+        const { dateFrom, dateTo } = getCurrentWeekDateRange();
+
         Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
-            this.setAppState({ baseData, subjectData, cookie, meta: { isFetching: false } }); // TODO: fix structure of data
+            this.setAppState({ baseData, subjectData, cookie, meta: { isFetching: false }, filter: { dateFrom, dateTo } }); // TODO: fix structure of data
         });
     }
 
@@ -50,7 +53,7 @@ class App extends Component<Props, WithApplicationState> {
 
     setAppState = <T, >(obj: T) => {
         const { applicationState: previousApplicationState, ...other } = this.state;
-        console.log("DEBUG", { previousApplicationState, obj });
+        console.log('DEBUG', { previousApplicationState, obj });
         this.setState({ applicationState: { ...previousApplicationState, ...obj }, ...other });
     }
 
