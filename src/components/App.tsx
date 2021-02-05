@@ -19,6 +19,7 @@ interface Props {
 class App extends Component<Props, WithApplicationState> {
     constructor(props: Props) {
         super(props);
+        const { dateFrom, dateTo } = getCurrentWeekDateRange();
         this.state = {
             // @ts-ignore
             applicationState: {
@@ -27,7 +28,9 @@ class App extends Component<Props, WithApplicationState> {
                     isFetching: true,
                     isModalOpen: false,
                     reservationWorkoutId: undefined,
+                    isInitialized: true,
                 },
+                filter: { dateFrom, dateTo },
             },
         };
     }
@@ -39,10 +42,8 @@ class App extends Component<Props, WithApplicationState> {
         const subjectDataP = fetchSubjectData(configuration);
         const cookie = getCookie('customerData');
 
-        const { dateFrom, dateTo } = getCurrentWeekDateRange();
-
         Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
-            this.setAppState({ baseData, subjectData, cookie, meta: { isFetching: false }, filter: { dateFrom, dateTo } }); // TODO: fix structure of data
+            this.setAppState({ ...this.state, baseData, subjectData, cookie, meta: { isFetching: false } });
         });
     }
 
@@ -51,10 +52,9 @@ class App extends Component<Props, WithApplicationState> {
         logGlobalError({ error, errorInfo });
     }
 
-    setAppState = <T, >(obj: T) => {
-        const { applicationState: previousApplicationState, ...other } = this.state;
-        console.log('DEBUG', { previousApplicationState, obj });
-        this.setState({ applicationState: { ...previousApplicationState, ...obj }, ...other });
+    setAppState = <T, >(newState: T) => {
+        const { applicationState: oldState, ...other } = this.state;
+        this.setState({ applicationState: { ...oldState, ...newState }, ...other });
     }
 
     render() {

@@ -66,7 +66,6 @@ export const getFullGroupedCalendarsByDate = (state: ApplicationState) => {
     const dateTo = state?.filter?.dateTo;
     const dateFrom = state?.filter?.dateFrom;
     const emptyDateRange = getObjectWithDateKeys({ dateFrom, dateTo }, getDisplayDateWithDayName);
-    console.log(emptyDateRange );
     const idsWithDateKeys = calendars?.map(({ id, from }) => {
         const fromDate = new Date(from);
         const dateKey = getDisplayDateWithDayName(fromDate);

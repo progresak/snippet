@@ -8,7 +8,7 @@ export interface ApplicationState {
         isFetching: boolean;
         reservationWorkoutId?: string;
     }
-    filter: {
+    filter?: {
         selectedWorkoutId: string | undefined,
         selectedLectorId: string | undefined,
         dateFrom: Date;
