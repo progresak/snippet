@@ -5,7 +5,7 @@ import { withActionProps, withSelectorProps, withStoreProps } from './withStateC
 import { compose, isEmptyObject } from '../../utils';
 import { isModalOpened } from '../../selectors';
 import { closeModal as closeModalAction, reFetchBaseData, sendReservation, SendReservationResponse, setLoginCookie } from '../../actions/state';
-import { ProfilePlaceholder } from './imageComponents';
+import { EnvelopeImg, PhoneImg, ProfilePlaceholder, UserFilledImg, UserImg } from './imageComponents';
 import Button from './Button';
 import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
 import { FormData, SignInCookieFormat } from '../../types';
@@ -70,13 +70,31 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                 <Title>Pro dokončení rezervace zadejte své kontaktní údaje:</Title>
                 <form onSubmit={handleOnSubmit}>
                     <InputsWrapper>
-
-                        <Input value={name} onChange={handleOnChange('name')} placeholder="Jméno" />
-                        <Input value={surname} onChange={handleOnChange('surname')} placeholder="Příjmení" />
+                        <InputWrapper>
+                            <IconWrapper>
+                                <UserImg />
+                            </IconWrapper>
+                            <Input value={name} onChange={handleOnChange('name')} placeholder="Jméno" />
+                        </InputWrapper>
+                        <InputWrapper>
+                            <IconWrapper>
+                                <UserFilledImg />
+                            </IconWrapper>
+                            <Input value={surname} onChange={handleOnChange('surname')} placeholder="Příjmení" />
+                        </InputWrapper>
                         <Break />
-                        <Input value={email} onChange={handleOnChange('email')} type="email" placeholder="Váš e-mail" />
-                        <Input value={phone} onChange={handleOnChange('phone')} placeholder="Mobil" />
-
+                        <InputWrapper>
+                            <IconWrapper>
+                                <EnvelopeImg />
+                            </IconWrapper>
+                            <Input value={email} onChange={handleOnChange('email')} type="email" placeholder="Váš e-mail" />
+                        </InputWrapper>
+                        <InputWrapper>
+                            <IconWrapper>
+                                <PhoneImg />
+                            </IconWrapper>
+                            <Input value={phone} onChange={handleOnChange('phone')} placeholder="Mobil" />
+                        </InputWrapper>
                     </InputsWrapper>
                     <ButtonsWrapper>
                         <Button variant="secondary" onClick={closeModal}>Zrušit</Button>
@@ -119,6 +137,14 @@ const ButtonsWrapper = styled.div`
 const Break = styled.div`
   flex-basis: 100%;
   height: 0;
+`;
+const InputWrapper = styled.span`
+  position: relative;
+`;
+const IconWrapper = styled.span`
+    position: absolute;
+    left: 15px;
+    top: 10px;
 `;
 const Input = styled.input`
   height: 25px;
