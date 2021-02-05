@@ -5,7 +5,7 @@ import { withActionProps, withSelectorProps, withStoreProps } from './withStateC
 import { compose, isEmptyObject } from '../../utils';
 import { isModalOpened } from '../../selectors';
 import { closeModal as closeModalAction, reFetchBaseData, sendReservation, SendReservationResponse, setLoginCookie } from '../../actions/state';
-import { EnvelopeImg, PhoneImg, ProfilePlaceholder, UserFilledImg, UserImg } from './imageComponents';
+import { AvatarPlaceholder, EnvelopeImg, PhoneImg, UserFilledImg, UserImg } from './imageComponents';
 import Button from './Button';
 import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
 import { FormData, SignInCookieFormat } from '../../types';
@@ -113,7 +113,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
         <Modal isActive onClose={handleCloseModal} portalContainerId="modal">
             <ContentWrapper>
                 <AvatarWrapper>
-                    <ProfilePlaceholder />
+                    <AvatarPlaceholder color="#6cb91c" />
                 </AvatarWrapper>
                 <Title>Pro dokončení rezervace zadejte své kontaktní údaje:</Title>
                 <form onSubmit={handleOnSubmit}>
@@ -243,8 +243,10 @@ const ContentWrapper = styled.div`
 const AvatarWrapper = styled.div`
   max-width: 50px;
   border-radius: 100px;
-  background: #dadada;
+  background: white;
+  border:1px solid #dadada;
   text-align: center;
+  padding: 10px;
   margin-bottom: 10px;
 `;
 

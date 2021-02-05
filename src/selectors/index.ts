@@ -1,5 +1,5 @@
 import { ApplicationState, Cart, MyFoxUser, WithId } from '../types';
-import { findByKey, getCurrentWeekDateRange, getDisplayDateWithDayName, getObjectWithDateKeys, groupBy, uniqueArrayOfObjects } from '../utils';
+import { findByKey, getDisplayDateWithDayName, getObjectWithDateKeys, groupBy, uniqueArrayOfObjects } from '../utils';
 
 export const getUniqueInstructors = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;

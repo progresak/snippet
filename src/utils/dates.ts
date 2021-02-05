@@ -37,8 +37,8 @@ export const getCurrentWeekDateRange = (): WeekRange => {
 };
 
 export const getWeekDiffRange = ({ dateFrom, dateTo }: WeekRange, next = true): WeekRange => {
-    const prevFrom = new Date(dateFrom.setDate((dateFrom.getDate() + (next ? 6 : -7))));
-    const prevTo = new Date(dateTo.setDate((dateTo.getDate() + (next ? 7 : -6))));
+    const prevFrom = new Date(dateFrom.setDate((dateFrom.getDate() + (next ? 6 : -8))));
+    const prevTo = new Date(dateTo.setDate((dateTo.getDate() + (next ? 7 : -7))));
     return {
         dateFrom: prevFrom,
         dateTo: prevTo,
