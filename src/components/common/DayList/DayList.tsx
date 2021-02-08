@@ -3,6 +3,7 @@ import DayItem from './components/DayItem/DayItem';
 import { withSelectorProps } from '../withStateContext';
 import { getFullGroupedCalendarsByDate } from '../../../selectors';
 import { WithId } from '../../../types';
+import { LocalizedText, TextKey } from '../../../translations';
 
 interface DayListProps {
     days: Record<string, WithId & {dateKey: string}>
@@ -16,7 +17,7 @@ const renderItems = (days: Record<string, WithId & {dateKey: string}>) => Object
 
 const DayList: React.FC<DayListProps> = ({ days }) => {
     if (!days) {
-        return (<span>Loading...</span>); // todo: spinner
+        return (<LocalizedText textKey={TextKey.Loading} />); // todo: spinner
     }
 
     return (

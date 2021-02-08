@@ -1,18 +1,21 @@
-const days = ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
+const days = {
+    cs: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
+    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+};
 
 export const getDisplayDate = (date: Date) => date.toLocaleDateString();
 
-export const getDisplayDateWithDayName = (date: Date) => {
+export const getDisplayDateWithDayName = (date: Date, locale: string = 'cs') => {
     const disDate = getDisplayDate(date);
-    const dayName = days[date.getDay()];
+    const dayName = days[locale][date.getDay()];
 
     return `${dayName} ${disDate}`;
 };
 
-export const getDisplayDateWithTime = (date: Date) => {
+export const getDisplayDateWithTime = (date: Date, locale: string = 'cs') => {
     const day = date.getUTCDay();
     const month = date.getUTCMonth();
-    const dayName = days[date.getDay()];
+    const dayName = days[locale][date.getDay()];
     const minutes = date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes();
     const hours = date.getUTCHours();
 
@@ -62,14 +65,14 @@ const times = (x) => (f) => {
     }
 };
 
-export const getObjectWithDateKeys = ({ dateFrom, dateTo }: WeekRange, callback: (d:Date) => string): object => {
+export const getObjectWithDateKeys = ({ dateFrom, dateTo, locale }: WeekRange & { locale: string }, callback: (d:Date, l: string) => string): object => {
     let datePointer = new Date(dateFrom.valueOf());
     const obj = {};
     const timeDiff = dateFrom.getTime() - dateTo.getTime();
 
     const daysDifference = Math.abs(timeDiff / (1000 * 3600 * 24)) + 1;
     times(daysDifference)(() => {
-        obj[callback(datePointer)] = [];
+        obj[callback(datePointer, locale)] = [];
         datePointer = new Date(datePointer.setDate(datePointer.getDate() + 1));
     });
 

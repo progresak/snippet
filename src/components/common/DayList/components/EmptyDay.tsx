@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { LocalizedText, TextKey } from '../../../../translations';
 
 const EmptyDay = () => (
     <WrapperElement>
-        <span>Žádné lekce tento den.</span>
+        <LocalizedText textKey={TextKey.NoWorkoutsToday} />
         <DividerDiv />
     </WrapperElement>
 );

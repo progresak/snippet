@@ -29,17 +29,14 @@ export const Header: React.FC<HeaderProps> = ({ logoUrl, title, titleAlternative
             <TitleWrapper>
                 <SiteTitle>{webTitle}</SiteTitle>
                 <SiteSubTitle>
-                    <LocalizedText textKey={TextKey.Reservation} />
-                    {' '}
-                    <span>na skupinovou lekci</span>
+                    <LocalizedText textKey={TextKey.ReservationToGroupWorkout} />
                 </SiteSubTitle>
                 <AddressLabel>{fullAddress}</AddressLabel>
             </TitleWrapper>
             <LanguageWrapper>
                 <LanguageSelector />
                 <BrandLabel>
-                    Rezervační systém
-                    {' '}
+                    <LocalizedText textKey={TextKey.ReservationSystem} />
                     <br />
                     <SmallLogo />
                     <span>myFox</span>

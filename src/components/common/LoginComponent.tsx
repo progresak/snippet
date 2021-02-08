@@ -4,6 +4,7 @@ import { SignInCookieFormat } from '../../types';
 import { compose, isEmptyObject } from '../../utils';
 import { withActionProps, withStoreProps } from './withStateContext';
 import { logOut } from '../../actions/state';
+import { LocalizedText, TextKey } from '../../translations';
 
 interface LoginComponentProps {
     cookie: SignInCookieFormat;
@@ -18,10 +19,11 @@ const LoginComponent = ({ cookie, logout }: LoginComponentProps) => {
     return (
         <Wrapper>
             <SignInText>
-                {`Přihlašujete se jako: ${name} ${surname}, `}
+                <LocalizedText textKey={TextKey.YouAreLoggedInAs} />
+                {`: ${name} ${surname}, `}
             </SignInText>
             <LogoutText onClick={logout}>
-                odhlásit
+                <LocalizedText textKey={TextKey.LogOut} />
             </LogoutText>
         </Wrapper>
     );

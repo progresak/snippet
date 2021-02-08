@@ -9,6 +9,7 @@ import { AvatarPlaceholder, EnvelopeImg, PhoneImg, UserFilledImg, UserImg } from
 import Button from './Button';
 import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
 import { FormData, SignInCookieFormat } from '../../types';
+import { LocalizedText, TextKey } from '../../translations';
 
 interface ReservationModalProps {
     isOpened: boolean;
@@ -56,7 +57,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
             setFormMetaData(initFormMetaState);
             setFormData(initFormState);
         };
-    }, [cookie, isOpened, cookie]);
+    }, [cookie, isOpened]);
 
     const setFormInvalid = () => {
         const newObj = {};
@@ -118,7 +119,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                 <AvatarWrapper>
                     <AvatarPlaceholder color="#6cb91c" />
                 </AvatarWrapper>
-                <Title>Pro dokončení rezervace zadejte své kontaktní údaje:</Title>
+                <Title><LocalizedText textKey={TextKey.ReservationLabelText} /></Title>
                 <form onSubmit={handleOnSubmit}>
                     <InputsWrapper>
                         <InputWrapper>
@@ -172,11 +173,11 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                             />
                         </InputWrapper>
                     </InputsWrapper>
-                    {isFormInvalid ? (<span>Vyplňte prosím všechna pole</span>) : null}
-                    {isSigned ? <SignedSpan className="fade-in">Přihlášeno</SignedSpan> : null}
+                    {isFormInvalid ? (<LocalizedText textKey={TextKey.FillAllFields} />) : null}
+                    {isSigned ? <SignedSpan className="fade-in"><LocalizedText textKey={TextKey.LoggedIn} /></SignedSpan> : null}
                     <ButtonsWrapper>
-                        <Button variant="secondary" onClick={handleCloseModal}>Zrušit</Button>
-                        <Button onClick={handleOnSubmit}>Ok</Button>
+                        <Button variant="secondary" onClick={handleCloseModal}><LocalizedText textKey={TextKey.Cancel} /></Button>
+                        <Button onClick={handleOnSubmit}><LocalizedText textKey={TextKey.Ok} /></Button>
                     </ButtonsWrapper>
                 </form>
             </ContentWrapper>

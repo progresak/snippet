@@ -4,7 +4,6 @@ import { device } from '../global/mediaQueries';
 import { withActionProps, withStoreProps } from '../../common/withStateContext';
 import { compose } from '../../../utils';
 import { changeLanguage } from '../../../actions/state';
-import { SyntheticEventData } from 'react-dom/test-utils';
 
 interface Option {
     value: string;

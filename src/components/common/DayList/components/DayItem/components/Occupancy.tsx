@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { device } from '../../../../../layout/global/mediaQueries';
+import { LocalizedText, TextKey } from '../../../../../../translations';
 
 interface OccupancyProps {
     max: number;
@@ -10,7 +11,10 @@ interface OccupancyProps {
 
 const Occupancy: React.FC<OccupancyProps> = ({ max, current, newLine = false }) => (
     <Wrapper>
-        <span>Obsazeno:&nbsp;</span>
+        <span>
+            <LocalizedText textKey={TextKey.Occupated} />
+            :&nbsp;
+        </span>
         {newLine ? <br /> : null}
         <ColoredCount isFull={max === current}>{current}</ColoredCount>
         <From>

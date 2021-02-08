@@ -4,6 +4,7 @@ import { compose, getDisplayDate, isPrevWeekButtonDisabled } from '../../../../u
 import { withActionProps, withStoreProps } from '../../withStateContext';
 import { setWeekDiffFilter } from '../../../../actions/state';
 import { NextButton } from '../../imageComponents';
+import { LocalizedText, TextKey } from '../../../../translations';
 
 interface DateSwitcherProps {
     dateFrom?: Date;
@@ -18,9 +19,10 @@ export const DateSwitcher: React.FC<DateSwitcherProps> = ({ dateFrom, dateTo, se
     const isPrevDisabled = isPrevWeekButtonDisabled(dateFrom);
     return (
         <WrapperElement>
-            <RoundArrowButton isReverse={true} onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />
+            <RoundArrowButton isReverse onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />
             <DisplayedDate>
-                {`Týden: ${getDisplayDate(dateFrom)} - ${getDisplayDate(dateTo)}`}
+                <LocalizedText textKey={TextKey.Week} />
+                {`: ${getDisplayDate(dateFrom)} - ${getDisplayDate(dateTo)}`}
             </DisplayedDate>
             <RoundArrowButton onClick={() => setDiff(true)} />
         </WrapperElement>

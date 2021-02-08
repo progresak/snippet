@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import myFoxLogo from '../../images/logo_myfox.svg';
 import { SmallLogo } from '../../common';
+import { LocalizedText, TextKey } from '../../../translations';
 import { withStoreProps } from '../../common/withStateContext';
 
 interface FooterProps {
@@ -14,8 +15,13 @@ export const Footer: React.FC<FooterProps> = ({ title }) => (
             <span>{title}</span>
             <Copyright>
                 <SmallLogo />
-                &nbsp;rezervační systém my
-                <strong>Fox</strong>
+                &nbsp;
+                <LocalizedText textKey={TextKey.ReservationSystem} />
+                {' '}
+                <span>
+                    my
+                    <strong>Fox</strong>
+                </span>
                 {' '}
                 &copy;
                 {' '}

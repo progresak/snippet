@@ -1,18 +1,20 @@
-import React from 'react';
 import styled from 'styled-components';
+import React from 'react';
 import Occupancy from './Occupancy';
-import { withActionProps, withSelectorProps } from '../../../../withStateContext';
-import { getCalendarById } from '../../../../../../selectors';
 import { Calendar, Employee } from '../../../../../../types';
 import { compose, getDisplayDateWithTime, isPastDate } from '../../../../../../utils';
 import { AvatarPlaceholderImg, GreenCheckmark, RunningPlaceholderImg } from '../../../../imageComponents';
-import { openModalWithId } from '../../../../../../actions/state';
 import { device } from '../../../../../layout/global/mediaQueries';
+import { LocalizedText, TextKey } from '../../../../../../translations';
+import { getCalendarById } from '../../../../../../selectors';
+import { withActionProps, withSelectorProps, withStoreProps } from '../../../../withStateContext';
+import { openModalWithId } from '../../../../../../actions/state';
 
 interface WorkoutProps extends Calendar {
     dateFrom: Date;
     dateTo: Date;
     signedIn: boolean;
+    locale: string;
     openModal: (workoutId: string) => boolean;
 }
 
@@ -32,7 +34,7 @@ const renderInstructor = ({ userMyFox }: Employee, shortName = false) => {
     );
 };
 
-const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capacity, duration, note, carts, employees, dateFrom, dateTo, signedIn }) => {
+const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, locale, capacity, duration, note, carts, employees, dateFrom, dateTo, signedIn }) => {
     const workout = carts[0];
     if (!workout) {
         return null;
@@ -50,13 +52,13 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                     <GreenCheckmark />
                 </CheckMarkWrapper>
                 <MarkLabel>
-                    přihlášeno
+                    <LocalizedText textKey={TextKey.WorkoutSignedIn} />
                 </MarkLabel>
             </SignedWrapper>
         )
         : (
             <ReservationButton disabled={isWorkoutFull || isPastDate(dateTo)} onClick={openReservationModal}>
-                přihlásit
+                <LocalizedText textKey={TextKey.WorkoutSignIn} />
             </ReservationButton>
         );
 
@@ -70,15 +72,15 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                 </ImageWrapper>
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithTime(dateFrom)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom, locale)}</DateElement>
                         <GreenText>
                             {duration}
                             {' '}
-                            min
+                            <LocalizedText textKey={TextKey.Min} />
                         </GreenText>
                         <GreenText>
-                            Cena:
-                            {' '}
+                            <LocalizedText textKey={TextKey.Price} />
+                            {': '}
                             {carts[0].priceVat}
                             &nbsp;Kč
                         </GreenText>
@@ -100,15 +102,15 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
             <Wrapper className="compact">
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithTime(dateFrom)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom, locale)}</DateElement>
                         <GreenText>
                             {duration}
                             {' '}
-                            min
+                            <LocalizedText textKey={TextKey.Min} />
                         </GreenText>
                         <GreenText>
-                            Cena:
-                            {' '}
+                            <LocalizedText textKey={TextKey.Price} />
+                            {': '}
                             {carts[0].priceVat}
                             &nbsp;Kč
                         </GreenText>
@@ -145,6 +147,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
 const withWorkoutData = compose(
     withSelectorProps(getCalendarById),
     withActionProps(openModalWithId, 'openModal'),
+    withStoreProps('selectedLanguage', 'locale'),
 );
 
 export default withWorkoutData(Workout);
@@ -211,7 +214,7 @@ const ReservationButton = styled.button`
       background: #6cb91c;
       text-transform: uppercase;
       cursor: pointer;
-  
+
       ${({ disabled }) => disabled && 'background: #b7b7b7;'}
       ${({ disabled }) => disabled && 'border-color: #c4c4c4;'}
       ${({ disabled }) => disabled && 'cursor: auto;'}
@@ -232,7 +235,7 @@ const LayoutSelectorWrapper = styled.div`
   & > div.compact {
     display: none;
   }
-  
+
   @media ${device.compact} {
     & > div.desktop {
       display: none;
@@ -272,12 +275,12 @@ const ImageWrapper = styled.div<{ isPlaceholder: boolean, isWorkoutFull: boolean
     text-align: center;
     ${({ isPlaceholder }) => isPlaceholder && 'background: #c0c0c0;'}
     ${({ isWorkoutFull }) => isWorkoutFull && 'border-right: 4px solid #595959;'}
-    
+
     @media ${device.compactMin} {
       min-width: 100px;
       min-height: 100px;
     }
-    
+
     @media ${device.compact} {
       border: none;
       max-width: 80px;
@@ -298,7 +301,7 @@ const ContentWrapper = styled.div`
   padding-left: 10px;
   @media ${device.compact} {
     padding: 10px;
-    
+
   }
 `;
 
@@ -307,18 +310,18 @@ const ContentHeading = styled.div`
     justify-content: space-between;
     //font-size: 20px;
     text-align: center;
-  
+
     @media ${device.compactMin} {
       margin: 0 10px;
       padding: 5px;
       border-bottom: 1px solid #d6d6d6;
-      font-size: 15px;  
+      font-size: 15px;
     }
 `;
 const DateElement = styled.span`
     font-weight: 600;
     color: #737373;
-  
+
 `;
 const GreenText = styled.span`
     color: #6cb91c;
@@ -332,7 +335,7 @@ const ContentBody = styled.div`
     height: 100%;
     align-items: center;
     padding: 10px;
-  
+
     @media ${device.compact} {
       padding: 0;
       margin-top: 15px;
