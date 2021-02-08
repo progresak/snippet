@@ -10,6 +10,7 @@ export default Button;
 
 const ButtonElement = styled.button<ButtonProps>`
       color: white;
+      font-size: 16px;
       padding: 10px 20px;
       min-width: 100px;
       border: 1px solid #5da216;

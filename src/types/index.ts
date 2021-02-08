@@ -26,7 +26,7 @@ export interface FormData {
 }
 export interface WithApplicationState {
     applicationState: ApplicationState;
-    setApplicationState: (t:ApplicationState) => void;
+    setApplicationState: (t:ApplicationState) => ApplicationState;
 }
 
 export interface Address {
@@ -55,7 +55,11 @@ export interface Employee {
     receiptName: string;
     userMyFox: MyFoxUser;
 }
-
+export interface Customer {
+    id: string;
+    capacity: number;
+    note: string;
+}
 export interface Calendar {
     id: string;
     from: string;
@@ -63,7 +67,7 @@ export interface Calendar {
     capacity: number;
     capacityBooked: number;
     carts: Array<Cart>;
-    customers: Array<unknown>
+    customers: Array<Customer>
     duration: number; // in minutes
     employees: Array<Employee>;
     note: string;

@@ -15,7 +15,7 @@ interface ReservationModalProps {
     closeModal: () => void;
     reserveWorkout: (formData: FormData) => Promise<SendReservationResponse>;
     refetch: () => Promise<void>;
-    loginUser: (formData: FormData, customerId: string, calendarId: string) => void;
+    loginUser: (formData: FormData, customerId: string) => void;
     cookie: SignInCookieFormat;
 }
 const isErrorResponse = (res: CreateReservationResponse): res is CreateReservationErrorResponse => res?.error;
@@ -43,6 +43,7 @@ type FormMetaData = Record<keyof FormData, {
 const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch, loginUser, cookie }) => {
     const [formData, setFormData] = useState<FormData>(initFormState);
     const [formMetaData, setFormMetaData] = useState<FormMetaData>(initFormMetaState);
+    const [isSigned, setIsSigned] = useState<boolean >(false);
     useEffect(() => {
         if (undefined === cookie || isEmptyObject(cookie)) {
             return;
@@ -80,13 +81,14 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                 return;
             }
 
-            const { customerId, calendarId } = response;
-
-            setFormData(initFormState);
-            refetch().then(() => {
+            const { customerId } = response;
+            setIsSigned(true);
+            setTimeout(() => {
+                setFormData(initFormState);
                 closeModal();
-                loginUser(formData, customerId, calendarId);
-            });
+                loginUser(formData, customerId);
+                refetch();
+            }, 2500);
         });
     };
 
@@ -109,6 +111,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
     if (!isOpened) {
         return null;
     }
+
     return (
         <Modal isActive onClose={handleCloseModal} portalContainerId="modal">
             <ContentWrapper>
@@ -170,6 +173,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                         </InputWrapper>
                     </InputsWrapper>
                     {isFormInvalid ? (<span>Vyplňte prosím všechna pole</span>) : null}
+                    {isSigned ? <SignedSpan className="fade-in">Přihlášeno</SignedSpan> : null}
                     <ButtonsWrapper>
                         <Button variant="secondary" onClick={handleCloseModal}>Zrušit</Button>
                         <Button onClick={handleOnSubmit}>Ok</Button>
@@ -191,6 +195,16 @@ const withModalData = compose(
 
 export default withModalData(ReservationModal);
 
+const SignedSpan = styled.div`
+    background: rgba(108,185,28,0.5);
+    color: #595959;
+    border: 1px solid #5da216;
+    border-radius: 4px;
+    padding: 5px 20px;
+    width: 70%;
+    margin: auto;
+`;
+
 const InputsWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -198,6 +212,7 @@ const InputsWrapper = styled.div`
     text-align: center;
     justify-content: center;
     margin-top: 10px;
+    margin-bottom: 10px;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -221,9 +236,11 @@ const IconWrapper = styled.span`
     top: 10px;
 `;
 const Input = styled.input<{invalid: boolean}>`
-  height: 25px;
+  height: 28px;
+  color: #595959;
   border-radius: 5px;
   min-width: 200px;
+  font-size: 16px;
   border:1px solid #8d9da5;
   background: white;
   padding-left: 30px;
@@ -251,6 +268,6 @@ const AvatarWrapper = styled.div`
 `;
 
 const Title = styled.h2`
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
 `;

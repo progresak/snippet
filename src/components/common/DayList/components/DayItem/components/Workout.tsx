@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import placeholder from '../../../../../images/running.svg';
-import profilePlaceholder from '../../../../../images/user.svg';
 import Occupancy from './Occupancy';
 import { withActionProps, withSelectorProps } from '../../../../withStateContext';
 import { getCalendarById } from '../../../../../../selectors';
 import { Calendar, Employee } from '../../../../../../types';
 import { compose, getDisplayDateWithDayName, getDisplayDateWithTime } from '../../../../../../utils';
-import { GreenCheckmark } from '../../../../imageComponents';
+import { AvatarPlaceholderImg, GreenCheckmark, RunningPlaceholderImg } from '../../../../imageComponents';
 import { openModalWithId } from '../../../../../../actions/state';
 import { device } from '../../../../../layout/global/mediaQueries';
 
@@ -20,13 +18,14 @@ interface WorkoutProps extends Calendar {
 const renderInstructor = ({ userMyFox }: Employee, shortName = false) => {
     const { name, surname, pictureUrl } = userMyFox;
     const isPlaceholder = !pictureUrl;
-    const instructorImageSrc = isPlaceholder ? profilePlaceholder : pictureUrl;
     const instructorName = `${name}${!shortName ? ` ${surname}` : ''}`;
 
     return (
         <Instructor>
             <AvatarWrapper>
-                <Avatar src={instructorImageSrc} alt={instructorName} />
+                {isPlaceholder
+                    ? <AvatarPlaceholderImg />
+                    : <Avatar src={pictureUrl} alt={instructorName} />}
             </AvatarWrapper>
             <InstructorName>{instructorName}</InstructorName>
         </Instructor>
@@ -37,7 +36,6 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
     const workout = carts[0];
     const instructor = employees[0];
     const isPlaceholder = !workout.pictureUrl;
-    const workoutImageSrc = isPlaceholder ? placeholder : workout.pictureUrl;
 
     const openReservationModal = () => openModal(id);
 
@@ -62,8 +60,10 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
     return (
         <LayoutSelectorWrapper>
             <Wrapper className="desktop">
-                <ImageWrapper isPlaceholder={isPlaceholder}>
-                    <WorkoutImage src={workoutImageSrc} alt="placeholder" />
+                <ImageWrapper isWorkoutFull={isWorkoutFull} isPlaceholder={isPlaceholder}>
+                    {isPlaceholder
+                        ? <RunningPlaceholderImg />
+                        : <WorkoutImage src={workout.pictureUrl} alt="placeholder" />}
                 </ImageWrapper>
                 <ContentWrapper>
                     <ContentHeading>
@@ -87,7 +87,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                             <span>{workout.note}</span>
                             {note ? (<Note>{note}</Note>) : null}
                         </Information>
-                        {renderInstructor(instructor)}
+                        {renderInstructor(instructor, true)}
                         <ActionsElement>
                             {actionElement}
                         </ActionsElement>
@@ -112,8 +112,11 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
 
                     </ContentHeading>
                     <ContentBody>
-                        <ImageWrapper isPlaceholder={isPlaceholder}>
-                            <WorkoutImage src={workoutImageSrc} alt="placeholder" />
+                        <ImageWrapper isWorkoutFull={isWorkoutFull} isPlaceholder={isPlaceholder}>
+                            {isPlaceholder
+                                ? <RunningPlaceholderImg />
+                                : <WorkoutImage src={workout.pictureUrl} alt="placeholder" />}
+
                         </ImageWrapper>
                         <VerticalAligmentLP>
                             <Information>
@@ -167,6 +170,7 @@ const AvatarWrapper = styled.div`
     background: #dadada;
     text-align: center;
     margin-bottom: 5px;
+    overflow: auto;
 `;
 
 const Avatar = styled.img`
@@ -205,7 +209,7 @@ const ReservationButton = styled.button`
       text-transform: uppercase;
       cursor: pointer;
   
-      ${({ disabled }) => disabled && 'background: #b7  b7b7;'}
+      ${({ disabled }) => disabled && 'background: #b7b7b7;'}
       ${({ disabled }) => disabled && 'border-color: #c4c4c4;'}
       ${({ disabled }) => disabled && 'cursor: auto;'}
 
@@ -239,7 +243,8 @@ const LayoutSelectorWrapper = styled.div`
 const Wrapper = styled.div`
     display: flex;
     &:last-child {
-      border-bottom: 2px solid #d1d1d1;
+      border-bottom: 1px solid #d1d1d1;
+      border-top: 1px solid #d1d1d1;
     }
   @media ${device.compactMin} {
     border-radius: 5px;
@@ -255,13 +260,13 @@ const WorkoutImage = styled.img`
     height: 100%;
 `;
 
-const ImageWrapper = styled.div<{ isPlaceholder: boolean }>`
+const ImageWrapper = styled.div<{ isPlaceholder: boolean, isWorkoutFull: boolean }>`
     max-width: 120px;
   
     border-right: 4px solid #6bb91c;
     text-align: center;
-    ${({ isPlaceholder }) => isPlaceholder && 'background: #b4b4b4;'}
-    ${({ isPlaceholder }) => isPlaceholder && 'border-right: 4px solid #595959;'}
+    ${({ isPlaceholder }) => isPlaceholder && 'background: #c0c0c0;'}
+    ${({ isWorkoutFull }) => isWorkoutFull && 'border-right: 4px solid #595959;'}
     
     @media ${device.compactMin} {
       min-width: 100px;
@@ -321,7 +326,8 @@ const ContentBody = styled.div`
     justify-content: space-between;
     height: 100%;
     align-items: center;
-    padding: 0 10px;
+    padding: 10px;
+  
     @media ${device.compact} {
       padding: 0;
       margin-top: 15px;

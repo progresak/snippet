@@ -1,8 +1,11 @@
-import { ApplicationState, Cart, MyFoxUser, WithId } from '../types';
+import { ApplicationState, Cart, MyFoxUser, SignInCookieFormat, WithId } from '../types';
 import { findByKey, getDisplayDateWithDayName, getObjectWithDateKeys, groupBy, uniqueArrayOfObjects } from '../utils';
 
 export const getUniqueInstructors = (state: ApplicationState) => {
     const calendars = state?.baseData?.calendars;
+    if (!calendars?.length) {
+        return [];
+    }
     const employees = calendars?.map<MyFoxUser[]>(({ employees: e }) => e.map<MyFoxUser>(({ userMyFox }) => userMyFox)).reduce((prev, curr) => prev.concat(curr));
     if (employees) {
         return uniqueArrayOfObjects(employees);
@@ -37,8 +40,10 @@ export const getCalendarById = (state: ApplicationState, { id }: WithId) => {
         return undefined;
     }
     const dateFrom = new Date(calendar.from);
-
-    return { ...calendar, dateFrom };
+    const signedIn = state.cookie
+        ? !!calendar.customers.filter(({ id: calendarCustomerId }) => calendarCustomerId === (state.cookie as SignInCookieFormat).customerId).length
+        : false;
+    return { ...calendar, dateFrom, signedIn };
 };
 
 export const getFilteredCalendars = (state: ApplicationState) => {

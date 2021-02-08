@@ -1,8 +1,13 @@
-import { FetchBaseResponse, FetchSubjectDataResponse } from '../types';
+import { ApplicationState, FetchBaseResponse, FetchSubjectDataResponse, WithApplicationState } from '../types';
 
+interface WithFromToCustomerId {
+    from: string;
+    to: string
+    customerId?: string;
+}
 const getSubjectUrl = ({ serverUrl, subjectAlias }: WithServerUrl & WithSubjectAlias) => `${serverUrl}subject/${subjectAlias}`;
-const getLessonsUrl = ({ serverUrl, shopId }: WithServerUrl & WithShopId) => `${serverUrl}shop/group?shopId=${shopId}`;
-const getReserveUrl = ({ serverUrl }: WithServerUrl) => `${serverUrl}group`;
+const getLessonsUrl = ({ serverUrl, shopId, from, to, customerId }: WithServerUrl & WithShopId & WithFromToCustomerId) => `${serverUrl}shop/group?shopId=${shopId}${from ? `&from=${from}` : ''}${to ? `&to=${to}` : ''}${customerId ? `&customerId=${customerId}` : ''}`;
+const getReserveUrl = ({ serverUrl, customerId }: WithServerUrl & { customerId: string }) => `${serverUrl}group${customerId ? `?customerId=${customerId}` : ''}`;
 
 interface WithServerUrl {
     serverUrl: string;
@@ -18,9 +23,27 @@ export async function getHttp<T>(request: string, method: 'get' | 'post' = 'get'
     return response.json();
 }
 
-export const fetchBase = async ({ shopId, serverUrl }: WithServerUrl & WithShopId) => await getHttp<FetchBaseResponse>(getLessonsUrl({ shopId, serverUrl }));
+export const fetchBase = async ({ applicationState: { apiConfiguration, filter, cookie } }: WithApplicationState) => {
+    if (!apiConfiguration || !filter) {
+        return Promise.reject();
+    }
+    const to = filter.dateTo.toISOString();
+    const from = filter.dateFrom.toISOString();
+    console.log({ cookie });
+    const customerId = cookie?.customerId;
+    // const to = '2021-02-07T00:00:00.000Z';
+    // const from = '2021-02-01T00:00:00.000Z';
+    const { shopId, serverUrl }: WithServerUrl & WithShopId = apiConfiguration;
+    return getHttp<FetchBaseResponse>(getLessonsUrl({ shopId, serverUrl, from, to, customerId }));
+};
 
-export const fetchSubjectData = async ({ serverUrl, subjectAlias }: WithServerUrl & WithSubjectAlias) => getHttp<FetchSubjectDataResponse>(getSubjectUrl({ serverUrl, subjectAlias }));
+export const fetchSubjectData = async ({ applicationState: { apiConfiguration } } : WithApplicationState) => {
+    if (!apiConfiguration) {
+        return Promise.reject();
+    }
+    const { serverUrl, subjectAlias }: WithServerUrl & WithSubjectAlias = apiConfiguration;
+    return getHttp<FetchSubjectDataResponse>(getSubjectUrl({ serverUrl, subjectAlias }));
+};
 
 export interface CreateReservationProps extends FormData {
     calendarId: string;

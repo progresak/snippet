@@ -45,10 +45,8 @@ export const withSelectorProps = (selector: Selector, key?: string) => <P, >(Com
     );
 });
 
-// type Selector = (applicationState: ApplicationState, props: any) => any;
-
 export const withActionProps = (action: any, key: string) => <P, >(Component: ComponentType<P & WithApplicationState>): ComponentType<P> => withStoreContext(({ applicationState, setApplicationState, ...props }) => {
-    const actionProp = (x:any) => action(x)({ applicationState: applicationState.applicationState, setApplicationState });
+    const actionProp = (...actionProps: any) => action(...actionProps)({ applicationState: applicationState.applicationState, setApplicationState });
     const componentProps = props as unknown as P;
     const newProps = { [key]: actionProp };
 

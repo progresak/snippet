@@ -5,7 +5,7 @@ import { SmallLogo } from '../../common';
 import { withStoreProps } from '../../common/withStateContext';
 import { Address } from '../../../types';
 import { compose } from '../../../utils';
-import placeholder from '../../images/user.svg';
+import { AvatarPlaceholderImg } from '../../common/imageComponents';
 
 interface HeaderProps {
     logoUrl: string;
@@ -15,11 +15,12 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ logoUrl, title, address }) => {
     const fullAddress = `${title} ${address?.street} ${address?.city}`;
-    const logoSrc = logoUrl || placeholder;
     return (
         <HeaderElement>
             <LogoWrapper>
-                <Image src={logoSrc} alt="Logo" />
+                {logoUrl
+                    ? <Image src={logoUrl} alt="Logo" />
+                    : <AvatarPlaceholderImg color="#595959" />}
             </LogoWrapper>
             <TitleWrapper>
                 <SiteTitle>{title}</SiteTitle>

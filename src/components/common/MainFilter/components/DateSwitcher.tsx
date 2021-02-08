@@ -15,12 +15,12 @@ export const DateSwitcher: React.FC<DateSwitcherProps> = ({ dateFrom, dateTo, se
     if (!dateFrom || !dateTo) {
         return null;
     }
-    const isPrevDisabled = !isPrevWeekButtonDisabled(dateFrom);
+    const isPrevDisabled = isPrevWeekButtonDisabled(dateFrom);
     return (
         <WrapperElement>
-            <RoundArrowButton reverse onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />
+            <RoundArrowButton isReverse={true} onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />
             <DisplayedDate>
-                {`Týden:${getDisplayDate(dateFrom)} - ${getDisplayDate(dateTo)}`}
+                {`Týden: ${getDisplayDate(dateFrom)} - ${getDisplayDate(dateTo)}`}
             </DisplayedDate>
             <RoundArrowButton onClick={() => setDiff(true)} />
         </WrapperElement>
@@ -48,9 +48,9 @@ const WrapperElement = styled.div`
   align-items: center;
 `;
 
-const RoundArrowButton = styled(NextButton)<{disabled?: boolean, onClick: () => void; reverse?: boolean}>`
+const RoundArrowButton = styled(NextButton)<{disabled?: boolean, onClick: () => void; isReverse?: boolean}>`
   cursor: pointer;
-  ${({ reverse }) => reverse && 'transform: rotate(180deg);'}
+  ${({ isReverse }) => isReverse && 'transform: rotate(180deg);'}
   
 
 `;

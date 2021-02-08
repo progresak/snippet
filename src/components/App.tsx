@@ -2,7 +2,7 @@ import React, { Component, ErrorInfo, Suspense } from 'react';
 import Layout from './layout/Layout';
 import Dashboard from './views/Dashboard';
 import StoreContext from '../providers/StoreContext';
-import { SnippetConfiguration, WithApplicationState } from '../types';
+import { SignInCookieFormat, SnippetConfiguration, WithApplicationState } from '../types';
 import { fetchBase, fetchSubjectData } from '../actions';
 import { ReservationModal } from './common';
 import { getCookie } from '../utils/cookies';
@@ -20,6 +20,7 @@ class App extends Component<Props, WithApplicationState> {
     constructor(props: Props) {
         super(props);
         const { dateFrom, dateTo } = getCurrentWeekDateRange();
+        const cookie = getCookie<SignInCookieFormat>('customerData');
         this.state = {
             // @ts-ignore
             applicationState: {
@@ -30,20 +31,18 @@ class App extends Component<Props, WithApplicationState> {
                     reservationWorkoutId: undefined,
                     isInitialized: true,
                 },
-                filter: { dateFrom, dateTo },
+                filter: { dateFrom, dateTo, selectedWorkoutId: undefined, selectedLectorId: undefined },
+                cookie,
             },
         };
     }
 
     componentDidMount = async () => {
-        const { configuration } = this.props;
-
-        const baseDataP = fetchBase(configuration);
-        const subjectDataP = fetchSubjectData(configuration);
-        const cookie = getCookie('customerData');
+        const baseDataP = fetchBase(this.state);
+        const subjectDataP = fetchSubjectData(this.state);
 
         Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
-            this.setAppState({ ...this.state, baseData, subjectData, cookie, meta: { isFetching: false } });
+            this.setAppState({ ...this.state, baseData, subjectData, meta: { isFetching: false } });
         });
     }
 
@@ -55,6 +54,7 @@ class App extends Component<Props, WithApplicationState> {
     setAppState = <T, >(newState: T) => {
         const { applicationState: oldState, ...other } = this.state;
         this.setState({ applicationState: { ...oldState, ...newState }, ...other });
+        return this.state;
     }
 
     render() {
