@@ -1,25 +1,26 @@
-const days = {
-    cs: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
-    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-};
+import { TextKey } from '../translations';
+
+const days = [TextKey.Sunday, TextKey.Monday, TextKey.Tuesday, TextKey.Wednesday, TextKey.Thursday, TextKey.Friday, TextKey.Saturday];
 
 export const getDisplayDate = (date: Date) => date.toLocaleDateString();
 
-export const getDisplayDateWithDayName = (date: Date, locale: string = 'cs') => {
+export const getDisplayDateWithDayName = (date: Date, localizeText: ((tk: TextKey) => string) | null = null) => {
     const disDate = getDisplayDate(date);
-    const dayName = days[locale][date.getDay()];
-
-    return `${dayName} ${disDate}`;
+    const dayName = days[date.getDay()];
+    const translate = localizeText || ((s) => s);
+    return `${translate(dayName)} ${disDate}`;
 };
 
-export const getDisplayDateWithTime = (date: Date, locale: string = 'cs') => {
+export const getDisplayDateWithTime = (date: Date, localizeText: ((tk: TextKey) => string) | null = null) => {
     const day = date.getUTCDay();
     const month = date.getUTCMonth();
-    const dayName = days[locale][date.getDay()];
+    const dayName = days[date.getDay()];
     const minutes = date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes();
     const hours = date.getUTCHours();
 
-    return `${dayName} ${day}.${month} ${hours}:${minutes}`;
+    const translate = localizeText || ((s) => s);
+
+    return `${translate(dayName)} ${day}.${month} ${hours}:${minutes}`;
 };
 
 const getActualDate = () => new Date(new Date().setHours(0, 0, 0, 0));
@@ -65,14 +66,14 @@ const times = (x) => (f) => {
     }
 };
 
-export const getObjectWithDateKeys = ({ dateFrom, dateTo, locale }: WeekRange & { locale: string }, callback: (d:Date, l: string) => string): object => {
+export const getObjectWithDateKeys = ({ dateFrom, dateTo }: WeekRange & { locale: string }, callback: (d:Date, l: string) => string): object => {
     let datePointer = new Date(dateFrom.valueOf());
     const obj = {};
     const timeDiff = dateFrom.getTime() - dateTo.getTime();
 
     const daysDifference = Math.abs(timeDiff / (1000 * 3600 * 24)) + 1;
     times(daysDifference)(() => {
-        obj[callback(datePointer, locale)] = [];
+        obj[datePointer] = [];
         datePointer = new Date(datePointer.setDate(datePointer.getDate() + 1));
     });
 

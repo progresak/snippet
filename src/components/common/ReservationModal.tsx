@@ -8,10 +8,11 @@ import { closeModal as closeModalAction, reFetchBaseData, sendReservation, SendR
 import { AvatarPlaceholder, EnvelopeImg, PhoneImg, UserFilledImg, UserImg } from './imageComponents';
 import Button from './Button';
 import { CreateReservationErrorResponse, CreateReservationResponse } from '../../actions';
-import { FormData, SignInCookieFormat } from '../../types';
+import { FormData, SignInCookieFormat, WithLocalizeText } from '../../types';
 import { LocalizedText, TextKey } from '../../translations';
+import withLocalizeText from './withLocalizeText';
 
-interface ReservationModalProps {
+interface ReservationModalProps extends WithLocalizeText {
     isOpened: boolean;
     closeModal: () => void;
     reserveWorkout: (formData: FormData) => Promise<SendReservationResponse>;
@@ -41,7 +42,7 @@ type FormMetaData = Record<keyof FormData, {
     valid: boolean;
 }>;
 
-const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModal, reserveWorkout, refetch, loginUser, cookie }) => {
+const ReservationModal: React.FC<ReservationModalProps> = ({ localizeText, isOpened, closeModal, reserveWorkout, refetch, loginUser, cookie }) => {
     const [formData, setFormData] = useState<FormData>(initFormState);
     const [formMetaData, setFormMetaData] = useState<FormMetaData>(initFormMetaState);
     const [isSigned, setIsSigned] = useState<boolean >(false);
@@ -131,7 +132,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                                 invalid={isInvalid('name')}
                                 onBlur={handleOnBlur('name')}
                                 onChange={handleOnChange('name')}
-                                placeholder="Jméno"
+                                placeholder={localizeText(TextKey.Name)}
                             />
                         </InputWrapper>
                         <InputWrapper>
@@ -143,7 +144,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                                 invalid={isInvalid('surname')}
                                 onBlur={handleOnBlur('surname')}
                                 onChange={handleOnChange('surname')}
-                                placeholder="Příjmení"
+                                placeholder={localizeText(TextKey.Surname)}
                             />
                         </InputWrapper>
                         <Break />
@@ -157,7 +158,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                                 onBlur={handleOnBlur('email')}
                                 onChange={handleOnChange('email')}
                                 type="email"
-                                placeholder="Váš e-mail"
+                                placeholder={localizeText(TextKey.YourEmail)}
                             />
                         </InputWrapper>
                         <InputWrapper>
@@ -169,7 +170,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ isOpened, closeModa
                                 invalid={isInvalid('phone')}
                                 onBlur={handleOnBlur('phone')}
                                 onChange={handleOnChange('phone')}
-                                placeholder="Mobil"
+                                placeholder={localizeText(TextKey.Phone)}
                             />
                         </InputWrapper>
                     </InputsWrapper>
@@ -192,6 +193,7 @@ const withModalData = compose(
     withActionProps(sendReservation, 'reserveWorkout'),
     withActionProps(reFetchBaseData, 'refetch'),
     withStoreProps('cookie', 'cookie'),
+    withLocalizeText,
 );
 
 export default withModalData(ReservationModal);

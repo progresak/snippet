@@ -8,6 +8,8 @@ import { MyFoxUser } from '../../../types';
 import { compose } from '../../../utils';
 import { setFilterLectorId, setFilterWorkoutId } from '../../../actions/state';
 import { device } from '../../layout/global/mediaQueries';
+import withLocalizeText from '../withLocalizeText';
+import { TextKey } from '../../../translations';
 
 interface MainFilterProps {
     instructors: MyFoxUser[];
@@ -25,13 +27,14 @@ export const MainFilter: React.FC<MainFilterProps> = ({ instructors, workouts, s
     return (
         <MainFilterWrapper>
             <FiltersWrapper>
-                <FilterSelectBox key="workouts" defaultName="Lekce" options={workoutsOptions} handleOnChange={setWorkoutId} selectedId={selectedWorkoutId} />
-                <FilterSelectBox key="lectors" defaultName="Instruktor" options={instructorOptions} handleOnChange={setLectorId} selectedId={selectedLectorId} />
+                <ConnectedFilterSelectBox key="workouts" defaultName={TextKey.Workout} options={workoutsOptions} handleOnChange={setWorkoutId} selectedId={selectedWorkoutId} />
+                <ConnectedFilterSelectBox key="lectors" defaultName={TextKey.Instructor} options={instructorOptions} handleOnChange={setLectorId} selectedId={selectedLectorId} />
             </FiltersWrapper>
             <DateSwitcher />
         </MainFilterWrapper>
     );
 };
+const ConnectedFilterSelectBox = withLocalizeText(FilterSelectBox);
 
 const withMainFilterData = compose(
     withSelectorProps(getUniqueInstructors, 'instructors'),

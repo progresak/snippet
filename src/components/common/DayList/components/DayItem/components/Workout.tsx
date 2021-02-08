@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React from 'react';
 import Occupancy from './Occupancy';
-import { Calendar, Employee } from '../../../../../../types';
+import { Calendar, Employee, WithLocalizeText } from '../../../../../../types';
 import { compose, getDisplayDateWithTime, isPastDate } from '../../../../../../utils';
 import { AvatarPlaceholderImg, GreenCheckmark, RunningPlaceholderImg } from '../../../../imageComponents';
 import { device } from '../../../../../layout/global/mediaQueries';
@@ -9,8 +9,9 @@ import { LocalizedText, TextKey } from '../../../../../../translations';
 import { getCalendarById } from '../../../../../../selectors';
 import { withActionProps, withSelectorProps, withStoreProps } from '../../../../withStateContext';
 import { openModalWithId } from '../../../../../../actions/state';
+import withLocalizeText from '../../../../withLocalizeText';
 
-interface WorkoutProps extends Calendar {
+interface WorkoutProps extends Calendar, WithLocalizeText {
     dateFrom: Date;
     dateTo: Date;
     signedIn: boolean;
@@ -34,7 +35,7 @@ const renderInstructor = ({ userMyFox }: Employee, shortName = false) => {
     );
 };
 
-const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, locale, capacity, duration, note, carts, employees, dateFrom, dateTo, signedIn }) => {
+const Workout: React.FC<WorkoutProps> = ({ openModal, id, localizeText, capacityBooked, locale, capacity, duration, note, carts, employees, dateFrom, dateTo, signedIn }) => {
     const workout = carts[0];
     if (!workout) {
         return null;
@@ -72,7 +73,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, locale
                 </ImageWrapper>
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithTime(dateFrom, locale)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom, localizeText)}</DateElement>
                         <GreenText>
                             {duration}
                             {' '}
@@ -102,7 +103,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, locale
             <Wrapper className="compact">
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithTime(dateFrom, locale)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom, localizeText)}</DateElement>
                         <GreenText>
                             {duration}
                             {' '}
@@ -148,6 +149,7 @@ const withWorkoutData = compose(
     withSelectorProps(getCalendarById),
     withActionProps(openModalWithId, 'openModal'),
     withStoreProps('selectedLanguage', 'locale'),
+    withLocalizeText,
 );
 
 export default withWorkoutData(Workout);

@@ -19,6 +19,19 @@ const translations: LocaleTranslations = {
     [TextKey.Price]: 'Price',
     [TextKey.Occupated]: 'Full',
     [TextKey.ReservationLabelText]: 'To complete your reservation, enter your contact details:',
+    [TextKey.Workout]: 'Workout',
+    [TextKey.Instructor]: 'Instructor',
+    [TextKey.Name]: 'Name',
+    [TextKey.Surname]: 'Surname',
+    [TextKey.YourEmail]: 'Your email',
+    [TextKey.Phone]: 'Phone',
+    [TextKey.Monday]: 'Monday',
+    [TextKey.Tuesday]: 'Tuesday',
+    [TextKey.Wednesday]: 'Wednesday',
+    [TextKey.Thursday]: 'Thursday',
+    [TextKey.Friday]: 'Friday',
+    [TextKey.Saturday]: 'Saturday',
+    [TextKey.Sunday]: 'Sunday',
 };
 
 export default translations;

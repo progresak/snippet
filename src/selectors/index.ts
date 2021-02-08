@@ -71,11 +71,10 @@ export const getFullGroupedCalendarsByDate = (state: ApplicationState) => {
     const calendars = getFilteredCalendars(state);
     const dateTo = state?.filter?.dateTo;
     const dateFrom = state?.filter?.dateFrom;
-    const emptyDateRange = getObjectWithDateKeys({ dateFrom, dateTo, locale: state.selectedLanguage }, getDisplayDateWithDayName);
+    const emptyDateRange = getObjectWithDateKeys({ dateFrom, dateTo }, getDisplayDateWithDayName);
     const idsWithDateKeys = calendars?.map(({ id, from }) => {
-        const fromDate = new Date(from);
-        const dateKey = getDisplayDateWithDayName(fromDate, state.selectedLanguage);
-        return { id, dateKey };
+        const fromDate = new Date(new Date(from).setHours(0, 0, 0, 0));
+        return { id, dateKey: fromDate };
     });
     const m = groupBy(idsWithDateKeys, 'dateKey');
 

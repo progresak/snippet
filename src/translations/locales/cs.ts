@@ -20,7 +20,19 @@ const translations: LocaleTranslations = {
     [TextKey.Price]: 'Cena',
     [TextKey.Occupated]: 'Obsazeno',
     [TextKey.ReservationLabelText]: 'Pro dokončení rezervace zadejte své kontaktní údaje:',
-
+    [TextKey.Workout]: 'Lekce',
+    [TextKey.Instructor]: 'Instruktor',
+    [TextKey.Name]: 'Jméno',
+    [TextKey.Surname]: 'Příjmení',
+    [TextKey.YourEmail]: 'Váš email',
+    [TextKey.Phone]: 'Mobil',
+    [TextKey.Monday]: 'Pondělí',
+    [TextKey.Tuesday]: 'Úterý',
+    [TextKey.Wednesday]: 'Středa',
+    [TextKey.Thursday]: 'Čtvrtek',
+    [TextKey.Friday]: 'Pátek',
+    [TextKey.Saturday]: 'Sobota',
+    [TextKey.Sunday]: 'Neděle',
 };
 
 export default translations;

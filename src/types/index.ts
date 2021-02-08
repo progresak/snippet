@@ -150,3 +150,7 @@ export interface SignInCookieFormat extends FormData {
     calendarIds: string[];
 }
 export type LocaleTranslations = Record<TextKey, string>;
+
+export interface WithLocalizeText {
+    localizeText: (tk: TextKey) => string
+}

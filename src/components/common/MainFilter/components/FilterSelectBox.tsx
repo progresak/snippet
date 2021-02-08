@@ -1,26 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 import { device } from '../../../layout/global/mediaQueries';
+import { WithLocalizeText } from '../../../../types';
+import { TextKey } from '../../../../translations';
 
 interface Option {
     id: string;
     label: string;
 }
 
-interface FilterSelectBoxProps {
-    defaultName: string;
+interface FilterSelectBoxProps extends WithLocalizeText {
+    defaultName: TextKey;
     options: Option[];
     selectedId?: string;
     handleOnChange: (id: string) => void;
 }
 
-export const FilterSelectBox: React.FC<FilterSelectBoxProps> = ({ options, defaultName, handleOnChange, selectedId }) => {
+export const FilterSelectBox: React.FC<FilterSelectBoxProps> = ({ options, defaultName, handleOnChange, localizeText, selectedId }) => {
     const handleChange = (event: any) => {
         handleOnChange(event.target.value);
     };
     return (
         <SelectInput value={selectedId} onChange={handleChange}>
-            <option key={`${defaultName}-default`} value="">{defaultName}</option>
+            <option key={`${defaultName}-default`} value="">{localizeText(defaultName)}</option>
             {options.map(({ id, label }) => (
                 <option key={id} value={id}>{label}</option>
             ))}

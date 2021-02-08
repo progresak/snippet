@@ -18,6 +18,19 @@ enum TextKey {
     Price = 'Price',
     ReservationLabelText = 'ReservationLabelText',
     Occupated = 'Occupated',
+    Workout = 'Workout',
+    Instructor = 'Instructor',
+    YourEmail = 'YourEmail',
+    Phone = 'Phone',
+    Name = 'Name',
+    Surname = 'Surname',
+    Monday = 'Monday',
+    Tuesday = 'Tuesday',
+    Wednesday = 'Wednesday',
+    Thursday = 'Thursday',
+    Friday = 'Friday',
+    Saturday = 'Saturday',
+    Sunday = 'Sunday',
 }
 
 export default TextKey;
