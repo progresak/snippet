@@ -1,4 +1,5 @@
 import { CalendarState } from '../enums';
+import TextKey from '../translations/TextKey';
 
 export interface ApplicationState {
     apiConfiguration?: SnippetConfiguration;
@@ -17,6 +18,7 @@ export interface ApplicationState {
     baseData: FetchBaseResponse;
     subjectData: FetchSubjectDataResponse;
     cookie: SignInCookieFormat | {};
+    selectedLanguage: string,
 }
 export interface FormData {
     name: string;
@@ -147,3 +149,4 @@ export interface SignInCookieFormat extends FormData {
     customerId: string;
     calendarIds: string[];
 }
+export type LocaleTranslations = Record<TextKey, string>;

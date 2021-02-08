@@ -1,11 +1,13 @@
 import React from 'react';
-import { AddressLabel, BrandLabel, Image, LanguageWrapper, LogoWrapper, SiteSubTitle, SiteTitle, TitleWrapper, HeaderElement } from './styles';
 import LanguageSelector from './LanguageSelector';
 import { SmallLogo } from '../../common';
 import { withStoreProps } from '../../common/withStateContext';
 import { Address } from '../../../types';
 import { compose } from '../../../utils';
 import { AvatarPlaceholderImg } from '../../common/imageComponents';
+import { LocalizedText } from '../../../translations';
+import TextKey from '../../../translations/TextKey';
+import { AddressLabel, BrandLabel, Image, LanguageWrapper, LogoWrapper, SiteSubTitle, SiteTitle, TitleWrapper, HeaderElement } from './styles';
 
 interface HeaderProps {
     logoUrl: string;
@@ -27,7 +29,8 @@ export const Header: React.FC<HeaderProps> = ({ logoUrl, title, titleAlternative
             <TitleWrapper>
                 <SiteTitle>{webTitle}</SiteTitle>
                 <SiteSubTitle>
-                    Rezervace
+                    <LocalizedText textKey={TextKey.Reservation} />
+                    {' '}
                     <span>na skupinovou lekci</span>
                 </SiteSubTitle>
                 <AddressLabel>{fullAddress}</AddressLabel>

@@ -9,7 +9,8 @@ import { getCookie } from '../utils/cookies';
 import { Loader } from './layout/components';
 import { getCurrentWeekDateRange, getProp } from '../utils';
 import ThemeContext from '../providers/ThemeContext';
-import spinner from './images/spinner.svg';
+import LocalizationContext from '../providers/LocalizationContext';
+import { getTranslation } from '../translations';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars
@@ -35,6 +36,7 @@ class App extends Component<Props, WithApplicationState> {
                 },
                 filter: { dateFrom, dateTo, selectedWorkoutId: undefined, selectedLectorId: undefined },
                 cookie,
+                selectedLanguage: navigator.language,
             },
         };
     }
@@ -59,6 +61,7 @@ class App extends Component<Props, WithApplicationState> {
     setAppState = <T, >(newState: T) => {
         const { applicationState: oldState, ...other } = this.state;
         this.setState({ applicationState: { ...oldState, ...newState }, ...other });
+        console.log(this.state);
         return this.state;
     }
 
@@ -81,21 +84,22 @@ class App extends Component<Props, WithApplicationState> {
         //     snippetLogo: spinner,
         //     snippetNoteLabel: 'blak',
         //     snippetNotePlaceholder: 'This is placeholder',
-        //     snippetNoteRequired: false,
+        //     snippetNoteRequired: false,LocalizedText.tsx
         //     snippetStaffSelect: false,
         // };
-
         return (
             <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState }}>
                 <ThemeContext.Provider value={micrositeData}>
-                    <Layout>
-                        <Suspense fallback={<Loader />}>
-                            <Dashboard />
-                        </Suspense>
-                    </Layout>
-                    <Loader />
-                    <ReservationModal />
-                    <div id="modal" />
+                    <LocalizationContext.Provider value={{ localizeText: getTranslation(this.state.applicationState.selectedLanguage) }}>
+                        <Layout>
+                            <Suspense fallback={<Loader />}>
+                                <Dashboard />
+                            </Suspense>
+                        </Layout>
+                        <Loader />
+                        <ReservationModal />
+                        <div id="modal" />
+                    </LocalizationContext.Provider>
                 </ThemeContext.Provider>
             </StoreContext.Provider>
         );

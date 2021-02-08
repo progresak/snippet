@@ -39,7 +39,6 @@ export const sendReservation = (formData: FormData) => async ({ applicationState
     }
 
     const cookie = getCookie<SignInCookieFormat>('customerData');
-    console.log('senduju Cookie', { cookie });
     const customerId = !isEmptyObject(cookie) ? cookie.customerId : undefined;
 
     const apiProps: CreateReservationProps = {
@@ -81,9 +80,7 @@ const getCustomerCookieObj = (userData: FormData, customerId: string): SignInCoo
 };
 
 export const setLoginCookie = (formData: FormData, customerId: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
-    console.log('TAK KURVA JE TU NEBO NE', { customerId });
     const cookie = getCustomerCookieObj(formData, customerId);
-    console.log('CELEJ OBJ', { cookie });
     setCookie('customerData', cookie);
     setApplicationState({ ...applicationState, cookie, meta: { ...applicationState.meta, isModalOpen: false } });
 };
@@ -95,4 +92,8 @@ export const setWeekDiffFilter = (add: boolean = false) => ({ applicationState, 
     fetchBase({ applicationState, setApplicationState }).then((baseData) => {
         setApplicationState({ ...applicationState, baseData, filter: { ...applicationState.filter, dateFrom, dateTo }, meta: { ...applicationState.meta, isFetching: false } });
     });
+};
+
+export const changeLanguage = (lng: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
+    setApplicationState({ ...applicationState, selectedLanguage: lng });
 };
