@@ -40,10 +40,11 @@ export const getCalendarById = (state: ApplicationState, { id }: WithId) => {
         return undefined;
     }
     const dateFrom = new Date(calendar.from);
+    const dateTo = new Date(calendar.to);
     const signedIn = state.cookie
         ? !!calendar.customers.filter(({ id: calendarCustomerId }) => calendarCustomerId === (state.cookie as SignInCookieFormat).customerId).length
         : false;
-    return { ...calendar, dateFrom, signedIn };
+    return { ...calendar, dateFrom, dateTo, signedIn };
 };
 
 export const getFilteredCalendars = (state: ApplicationState) => {

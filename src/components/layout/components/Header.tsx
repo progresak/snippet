@@ -10,11 +10,13 @@ import { AvatarPlaceholderImg } from '../../common/imageComponents';
 interface HeaderProps {
     logoUrl: string;
     title: string;
+    titleAlternative?: string;
     address: Address;
 }
 
-export const Header: React.FC<HeaderProps> = ({ logoUrl, title, address }) => {
+export const Header: React.FC<HeaderProps> = ({ logoUrl, title, titleAlternative, address }) => {
     const fullAddress = `${title} ${address?.street} ${address?.city}`;
+    const webTitle = title || titleAlternative || '';
     return (
         <HeaderElement>
             <LogoWrapper>
@@ -23,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ logoUrl, title, address }) => {
                     : <AvatarPlaceholderImg color="#595959" />}
             </LogoWrapper>
             <TitleWrapper>
-                <SiteTitle>{title}</SiteTitle>
+                <SiteTitle>{webTitle}</SiteTitle>
                 <SiteSubTitle>
                     Rezervace
                     <span>na skupinovou lekci</span>
@@ -45,7 +47,8 @@ export const Header: React.FC<HeaderProps> = ({ logoUrl, title, address }) => {
 };
 const withHeaderData = compose(
     withStoreProps(['subjectData', 'microsite', 'snippetLogo', 'url'], 'logoUrl'),
-    withStoreProps(['subjectData', 'name'], 'title'),
+    withStoreProps(['subjectData', 'name'], 'titleAlternative'),
+    withStoreProps(['subjectData', 'marketingName'], 'title'),
     withStoreProps(['baseData', 'address'], 'address'),
 );
 

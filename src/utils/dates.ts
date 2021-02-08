@@ -75,3 +75,5 @@ export const getObjectWithDateKeys = ({ dateFrom, dateTo }: WeekRange, callback:
 
     return obj;
 };
+
+export const isPastDate = (date: Date): boolean => date < getActualDate();

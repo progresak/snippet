@@ -3,17 +3,20 @@ import ErrorBoundary from './ErrorBoundary';
 import ResetStyle from './global/ResetStyle';
 import GlobalStyle from './global/GlobalStyle';
 import { PageWrapper, Content, Container, TopLine, PageBackground } from './styles';
-import { Header, Footer } from './components';
+import withTheme from '../common/withTheme';
 import { LoginComponent } from '../common';
+import { Header, Footer } from './components';
 
+const TopLineElement = withTheme(TopLine);
+const ConnectedGlobalStyle = withTheme(GlobalStyle);
 const Layout: React.FC = ({ children }) => (
     <>
         <ResetStyle />
-        <GlobalStyle />
+        <ConnectedGlobalStyle />
         <ErrorBoundary>
             <PageBackground />
             <PageWrapper>
-                <TopLine />
+                <TopLineElement />
                 <Container>
                     <Header />
                     <LoginComponent />

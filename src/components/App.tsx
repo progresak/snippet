@@ -2,12 +2,14 @@ import React, { Component, ErrorInfo, Suspense } from 'react';
 import Layout from './layout/Layout';
 import Dashboard from './views/Dashboard';
 import StoreContext from '../providers/StoreContext';
-import { SignInCookieFormat, SnippetConfiguration, WithApplicationState } from '../types';
+import { MyFoxMicroSite, SignInCookieFormat, SnippetConfiguration, WithApplicationState } from '../types';
 import { fetchBase, fetchSubjectData } from '../actions';
 import { ReservationModal } from './common';
 import { getCookie } from '../utils/cookies';
 import { Loader } from './layout/components';
-import { getCurrentWeekDateRange } from '../utils';
+import { getCurrentWeekDateRange, getProp } from '../utils';
+import ThemeContext from '../providers/ThemeContext';
+import spinner from './images/spinner.svg';
 
 interface Props {
     // eslint-disable-next-line no-unused-vars
@@ -43,6 +45,9 @@ class App extends Component<Props, WithApplicationState> {
 
         Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
             this.setAppState({ ...this.state, baseData, subjectData, meta: { isFetching: false } });
+            console.log({ baseData, subjectData });
+            const title = subjectData.marketingName || subjectData.name;
+            document.title = `${title} rezervace`;
         });
     }
 
@@ -63,17 +68,35 @@ class App extends Component<Props, WithApplicationState> {
         if (!isInitialized) {
             return <Loader />;
         }
+        const micrositeData: MyFoxMicroSite = getProp<WithApplicationState>(this.state, ['applicationState', 'subjectData', 'microsite']);
+        // Mock Test data for redesign
+        // const micrositeData = {
+        //     id: '',
+        //     publishSnippet: true,
+        //     snippetBackground: 'black',
+        //     snippetButtonColor: 'blue',
+        //     snippetButtonLink: 'blue',
+        //     snippetButtonText: 'blue',
+        //     snippetColor: 'red',
+        //     snippetLogo: spinner,
+        //     snippetNoteLabel: 'blak',
+        //     snippetNotePlaceholder: 'This is placeholder',
+        //     snippetNoteRequired: false,
+        //     snippetStaffSelect: false,
+        // };
 
         return (
             <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState }}>
-                <Layout>
-                    <Suspense fallback={<Loader />}>
-                        <Dashboard />
-                    </Suspense>
-                </Layout>
-                <Loader />
-                <ReservationModal />
-                <div id="modal" />
+                <ThemeContext.Provider value={micrositeData}>
+                    <Layout>
+                        <Suspense fallback={<Loader />}>
+                            <Dashboard />
+                        </Suspense>
+                    </Layout>
+                    <Loader />
+                    <ReservationModal />
+                    <div id="modal" />
+                </ThemeContext.Provider>
             </StoreContext.Provider>
         );
     }

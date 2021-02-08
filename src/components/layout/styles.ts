@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import backgroundImage from '../images/background.jpg';
 import { device } from './global/mediaQueries';
+import { MyFoxMicroSite } from '../../types';
 
 export const Content = styled.div`
   padding: 25px;
@@ -17,9 +18,10 @@ export const Container = styled.div`
     color: #595959;
 `;
 
-export const TopLine = styled.div`
+export const TopLine = styled.div<MyFoxMicroSite>`
     width: 100%;
     background: #6bb91c;
+    ${({ snippetColor }) => snippetColor && `background:${snippetColor};`}
     height: 4px;
 `;
 

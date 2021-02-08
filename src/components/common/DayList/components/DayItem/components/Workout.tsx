@@ -4,26 +4,26 @@ import Occupancy from './Occupancy';
 import { withActionProps, withSelectorProps } from '../../../../withStateContext';
 import { getCalendarById } from '../../../../../../selectors';
 import { Calendar, Employee } from '../../../../../../types';
-import { compose, getDisplayDateWithDayName, getDisplayDateWithTime } from '../../../../../../utils';
+import { compose, getDisplayDateWithTime, isPastDate } from '../../../../../../utils';
 import { AvatarPlaceholderImg, GreenCheckmark, RunningPlaceholderImg } from '../../../../imageComponents';
 import { openModalWithId } from '../../../../../../actions/state';
 import { device } from '../../../../../layout/global/mediaQueries';
 
 interface WorkoutProps extends Calendar {
     dateFrom: Date;
+    dateTo: Date;
     signedIn: boolean;
     openModal: (workoutId: string) => boolean;
 }
 
 const renderInstructor = ({ userMyFox }: Employee, shortName = false) => {
     const { name, surname, pictureUrl } = userMyFox;
-    const isPlaceholder = !pictureUrl;
     const instructorName = `${name}${!shortName ? ` ${surname}` : ''}`;
 
     return (
         <Instructor>
             <AvatarWrapper>
-                {isPlaceholder
+                {!pictureUrl
                     ? <AvatarPlaceholderImg />
                     : <Avatar src={pictureUrl} alt={instructorName} />}
             </AvatarWrapper>
@@ -32,8 +32,11 @@ const renderInstructor = ({ userMyFox }: Employee, shortName = false) => {
     );
 };
 
-const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capacity, duration, note, carts, employees, dateFrom, signedIn }) => {
+const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capacity, duration, note, carts, employees, dateFrom, dateTo, signedIn }) => {
     const workout = carts[0];
+    if (!workout) {
+        return null;
+    }
     const instructor = employees[0];
     const isPlaceholder = !workout.pictureUrl;
 
@@ -52,7 +55,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
             </SignedWrapper>
         )
         : (
-            <ReservationButton disabled={isWorkoutFull} onClick={openReservationModal}>
+            <ReservationButton disabled={isWorkoutFull || isPastDate(dateTo)} onClick={openReservationModal}>
                 přihlásit
             </ReservationButton>
         );
@@ -67,7 +70,7 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                 </ImageWrapper>
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithDayName(dateFrom)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom)}</DateElement>
                         <GreenText>
                             {duration}
                             {' '}
