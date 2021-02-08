@@ -40,6 +40,7 @@ const SelectInput = styled.select`
     font-size: 16px;
     border: 1px solid #c4c4c4;
     margin: 0 10px;
+    -moz-appearance: none;
 
   @media ${device.compact} {
     width: 70%;
