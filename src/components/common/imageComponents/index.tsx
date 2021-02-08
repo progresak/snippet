@@ -190,7 +190,7 @@ export const AvatarPlaceholderImg = ({ color = 'white', ...props }:ImageProps) =
         x="0px"
         y="0px"
         viewBox="0 0 512 512"
-        style={{ fill: color, width: '100%' }}
+        style={{ fill: color, width: '100%', height: '100%' }}
         {...props}
     >
         <g>

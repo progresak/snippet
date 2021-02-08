@@ -170,7 +170,7 @@ const AvatarWrapper = styled.div`
     background: #dadada;
     text-align: center;
     margin-bottom: 5px;
-    overflow: auto;
+    overflow: hidden;
 `;
 
 const Avatar = styled.img`
@@ -262,7 +262,9 @@ const WorkoutImage = styled.img`
 
 const ImageWrapper = styled.div<{ isPlaceholder: boolean, isWorkoutFull: boolean }>`
     max-width: 120px;
-  
+      display: flex;
+      align-content: center;
+      justify-content: center;
     border-right: 4px solid #6bb91c;
     text-align: center;
     ${({ isPlaceholder }) => isPlaceholder && 'background: #c0c0c0;'}
