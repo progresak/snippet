@@ -24,6 +24,8 @@ class App extends Component<Props, WithApplicationState> {
         super(props);
         const { dateFrom, dateTo } = getCurrentWeekDateRange();
         const cookie = getCookie<SignInCookieFormat>('customerData');
+
+        const selectedLanguage = window.localStorage.selectedLanguage || navigator.language;
         this.state = {
             // @ts-ignore
             applicationState: {
@@ -36,7 +38,7 @@ class App extends Component<Props, WithApplicationState> {
                 },
                 filter: { dateFrom, dateTo, selectedWorkoutId: undefined, selectedLectorId: undefined },
                 cookie,
-                selectedLanguage: navigator.language,
+                selectedLanguage,
             },
         };
     }
@@ -47,7 +49,6 @@ class App extends Component<Props, WithApplicationState> {
 
         Promise.all([baseDataP, subjectDataP]).then(([baseData, subjectData]) => {
             this.setAppState({ ...this.state, baseData, subjectData, meta: { isFetching: false } });
-            console.log({ baseData, subjectData });
             const title = subjectData.marketingName || subjectData.name;
             document.title = `${title} rezervace`;
         });
@@ -61,7 +62,6 @@ class App extends Component<Props, WithApplicationState> {
     setAppState = <T, >(newState: T) => {
         const { applicationState: oldState, ...other } = this.state;
         this.setState({ applicationState: { ...oldState, ...newState }, ...other });
-        console.log(this.state);
         return this.state;
     }
 

@@ -96,4 +96,5 @@ export const setWeekDiffFilter = (add: boolean = false) => ({ applicationState, 
 
 export const changeLanguage = (lng: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
     setApplicationState({ ...applicationState, selectedLanguage: lng });
+    window.localStorage.selectedLanguage = lng;
 };
