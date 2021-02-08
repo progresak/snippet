@@ -19,7 +19,8 @@ interface WeekRange {
 export const isPrevWeekButtonDisabled = (lastDay: Date) => {
     const today = getActualDate().setHours(0, 0, 0, 0);
     const lastDayRaw = lastDay.setHours(0, 0, 0, 0);
-    return (lastDayRaw < today);
+
+    return (lastDayRaw <= today);
 };
 
 export const getCurrentWeekDateRange = (): WeekRange => {

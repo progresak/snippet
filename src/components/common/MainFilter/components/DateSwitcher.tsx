@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { compose, getDisplayDate, isPrevWeekButtonDisabled } from '../../../../utils';
 import { withActionProps, withStoreProps } from '../../withStateContext';
 import { setWeekDiffFilter } from '../../../../actions/state';
+import { NextButton } from '../../imageComponents';
 
 interface DateSwitcherProps {
     dateFrom?: Date;
@@ -17,11 +18,11 @@ export const DateSwitcher: React.FC<DateSwitcherProps> = ({ dateFrom, dateTo, se
     const isPrevDisabled = isPrevWeekButtonDisabled(dateFrom);
     return (
         <WrapperElement>
-            <RoundArrowButton onClick={() => setDiff(false)} disabled={isPrevDisabled}>{'<'}</RoundArrowButton>
+            <RoundArrowButton reverse onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />
             <DisplayedDate>
                 {`Týden:${getDisplayDate(dateFrom)} - ${getDisplayDate(dateTo)}`}
             </DisplayedDate>
-            <RoundArrowButton onClick={() => setDiff(true)}>{'>'}</RoundArrowButton>
+            <RoundArrowButton onClick={() => setDiff(true)} />
         </WrapperElement>
     );
 };
@@ -47,23 +48,9 @@ const WrapperElement = styled.div`
   align-items: center;
 `;
 
-const RoundArrowButton = styled.button`
-  border-radius: 40px;
-  border: none;
-  color: white;
-  font-weight: bold;
-  padding: 6px 10px;
-  box-shadow: none;
-  text-shadow: none;
-  background: #6cb91c;
+const RoundArrowButton = styled(NextButton)<{disabled?: boolean, onClick: () => void; reverse?: boolean}>`
   cursor: pointer;
-
-  ${({ disabled }) => disabled && 'background: #b7b7b7;'}
-  ${({ disabled }) => disabled && 'border-color: #c4c4c4;'}
-  ${({ disabled }) => disabled && 'cursor: auto;'}
+  ${({ reverse }) => reverse && 'transform: rotate(180deg);'}
   
-  &:focus {
-    border:none;
-    outline: none;
-  }
+
 `;
