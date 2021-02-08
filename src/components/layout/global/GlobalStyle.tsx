@@ -39,6 +39,14 @@ const GlobalStyle = createGlobalStyle`
     0% {opacity:0;}
     100% {opacity:1;}
   }
+
+  @-moz-document url-prefix() {
+    select {
+      border: revert!important;
+      border-radius: revert!important;
+      background: revert!important;
+    }
+  }
 `;
 
 export default GlobalStyle;
