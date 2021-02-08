@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { Workout } from './components';
 import EmptyDay from '../EmptyDay';
-import CalendarImage from '../../../../images/calendar.svg';
 import { WithId } from '../../../../../types';
 import { device } from '../../../../layout/global/mediaQueries';
+import { CalendarImg, DisabledImage } from '../../../imageComponents';
 
 interface DayItemProps {
     date: string,
@@ -19,20 +19,25 @@ const renderWorkouts = (ids:WithId[]) => {
     return ids.map(({ id }) => <Workout id={id} key={id} />);
 };
 
-const DayItem: React.FC<DayItemProps> = ({ date, calendarIds }) => (
-    <Wrapper>
-        <TitleElement>
-            <CalendarIcon src={CalendarImage} alt={date} />
-            &nbsp;
-            <span>
-                {date}
-            </span>
-        </TitleElement>
-        <WorkoutsWrapper>
-            {renderWorkouts(calendarIds)}
-        </WorkoutsWrapper>
-    </Wrapper>
-);
+const DayItem: React.FC<DayItemProps> = ({ date, calendarIds }) => {
+    const isEmptyDay = !!calendarIds.length;
+    return (
+        <Wrapper>
+            <TitleElement>
+                <IconWrapper>
+                    {isEmptyDay ? <CalendarImg /> : <DisabledImage />}
+                </IconWrapper>
+                &nbsp;
+                <span>
+                    {date}
+                </span>
+            </TitleElement>
+            <WorkoutsWrapper>
+                {renderWorkouts(calendarIds)}
+            </WorkoutsWrapper>
+        </Wrapper>
+    );
+};
 
 export default DayItem;
 
@@ -57,18 +62,13 @@ const TitleElement = styled.div`
     font-size: 16px;
     padding: 5px 0;
     text-align: center;
-  
-  @media ${device.compact} {
-    border-radius: 0;
-    font-size: 22px;
-    padding: 7px 0;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: center;
 `;
 
-const CalendarIcon = styled.img`
-    height:13px;
+const IconWrapper = styled.div`
+    width: 16px;
     transform: translateY(1px);
-  @media ${device.compact} {
-    height:20px;
-  }
 `;
