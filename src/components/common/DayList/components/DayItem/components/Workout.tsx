@@ -6,7 +6,7 @@ import Occupancy from './Occupancy';
 import { withActionProps, withSelectorProps } from '../../../../withStateContext';
 import { getCalendarById } from '../../../../../../selectors';
 import { Calendar, Employee } from '../../../../../../types';
-import { compose, getDisplayDateWithDayName } from '../../../../../../utils';
+import { compose, getDisplayDateWithDayName, getDisplayDateWithTime } from '../../../../../../utils';
 import { GreenCheckmark } from '../../../../imageComponents';
 import { openModalWithId } from '../../../../../../actions/state';
 import { device } from '../../../../../layout/global/mediaQueries';
@@ -70,7 +70,8 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
                         <DateElement>{getDisplayDateWithDayName(dateFrom)}</DateElement>
                         <GreenText>
                             {duration}
-                            {' '}min
+                            {' '}
+                            min
                         </GreenText>
                         <GreenText>
                             Cena:
@@ -96,10 +97,11 @@ const Workout: React.FC<WorkoutProps> = ({ openModal, id, capacityBooked, capaci
             <Wrapper className="compact">
                 <ContentWrapper>
                     <ContentHeading>
-                        <DateElement>{getDisplayDateWithDayName(dateFrom)}</DateElement>
+                        <DateElement>{getDisplayDateWithTime(dateFrom)}</DateElement>
                         <GreenText>
                             {duration}
-                            {' '}min
+                            {' '}
+                            min
                         </GreenText>
                         <GreenText>
                             Cena:
@@ -176,7 +178,7 @@ const InstructorName = styled.span`
   font-size: 14px;
   @media ${device.compact} {
     font-weight: 100;
-    font-size: 18px;
+    //font-size: 18px;
   }
 `;
 
@@ -203,13 +205,14 @@ const ReservationButton = styled.button`
       text-transform: uppercase;
       cursor: pointer;
   
-      ${({ disabled }) => disabled && 'background: #b7b7b7;'}
+      ${({ disabled }) => disabled && 'background: #b7  b7b7;'}
       ${({ disabled }) => disabled && 'border-color: #c4c4c4;'}
       ${({ disabled }) => disabled && 'cursor: auto;'}
 
       @media ${device.compact} {
-        font-size: 20px;
-        height: 50px;
+        font-size: 16px;
+        font-weight: 500;
+        height: 44px;
         width: 90%;
         max-width: 180px;
       }
@@ -235,9 +238,8 @@ const LayoutSelectorWrapper = styled.div`
 
 const Wrapper = styled.div`
     display: flex;
-    //border-top: 1px solid #acacac;
     &:last-child {
-      border-bottom: 1px solid #e8e8e8;
+      border-bottom: 2px solid #d1d1d1;
     }
   @media ${device.compactMin} {
     border-radius: 5px;
@@ -286,13 +288,14 @@ const ContentWrapper = styled.div`
   padding-left: 10px;
   @media ${device.compact} {
     padding: 10px;
+    
   }
 `;
 
 const ContentHeading = styled.div`
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
+    //font-size: 20px;
     text-align: center;
   
     @media ${device.compactMin} {
@@ -337,12 +340,12 @@ const Information = styled.div`
       margin-top: 10px;
    }
     @media ${device.compact} {
-      font-size: 26px;
+      //font-size: 26px;
       //text-align: left;
       flex:1;
       &> span {
         font-weight: 100;
-        font-size: 20px;
+        //font-size: 20px;
       }
    }
 `;

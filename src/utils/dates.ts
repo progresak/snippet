@@ -9,6 +9,16 @@ export const getDisplayDateWithDayName = (date: Date) => {
     return `${dayName} ${disDate}`;
 };
 
+export const getDisplayDateWithTime = (date: Date) => {
+    const day = date.getUTCDay();
+    const month = date.getUTCMonth();
+    const dayName = days[date.getDay()];
+    const minutes = date.getUTCMinutes() === 0 ? '00' : date.getUTCMinutes();
+    const hours = date.getUTCHours();
+
+    return `${dayName} ${day}.${month} ${hours}:${minutes}`;
+};
+
 const getActualDate = () => new Date(new Date().setHours(0, 0, 0, 0));
 
 interface WeekRange {

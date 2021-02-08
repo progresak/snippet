@@ -15,7 +15,7 @@ export const DateSwitcher: React.FC<DateSwitcherProps> = ({ dateFrom, dateTo, se
     if (!dateFrom || !dateTo) {
         return null;
     }
-    const isPrevDisabled = isPrevWeekButtonDisabled(dateFrom);
+    const isPrevDisabled = !isPrevWeekButtonDisabled(dateFrom);
     return (
         <WrapperElement>
             <RoundArrowButton reverse onClick={() => !isPrevDisabled && setDiff(false)} color={isPrevDisabled ? '#cdcdcd' : undefined} disabled={isPrevDisabled} />

@@ -27,7 +27,8 @@ const Wrapper = styled.div`
     text-align: center;
     @media ${device.compact} {
       line-height: 20px;
-      font-size: 17px;
+      margin-top: 10px;
+      //font-size: 17px;
   }
 `;
 
