@@ -16,7 +16,7 @@ interface ReservationModalProps extends WithLocalizeText {
     isOpened: boolean;
     closeModal: () => void;
     reserveWorkout: (formData: FormData) => Promise<SendReservationResponse>;
-    refetch: () => Promise<void>;
+    refetch: (customerId: string) => Promise<void>;
     loginUser: (formData: FormData, customerId: string) => void;
     cookie: SignInCookieFormat;
 }
@@ -89,7 +89,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ localizeText, isOpe
                 setFormData(initFormState);
                 closeModal();
                 loginUser(formData, customerId);
-                refetch();
+                refetch(customerId);
             }, 2500);
         });
     };

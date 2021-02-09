@@ -88,7 +88,7 @@ class App extends Component<Props, WithApplicationState> {
         //     snippetStaffSelect: false,
         // };
         return (
-            <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState }}>
+            <StoreContext.Provider value={{ applicationState: this.state, setApplicationState: this.setAppState, getState: () => this.state.applicationState }}>
                 <ThemeContext.Provider value={micrositeData}>
                     <LocalizationContext.Provider value={{ localizeText: getTranslation(this.state.applicationState.selectedLanguage) }}>
                         <Layout>

@@ -23,13 +23,13 @@ export async function getHttp<T>(request: string, method: 'get' | 'post' = 'get'
     return response.json();
 }
 
-export const fetchBase = async ({ applicationState: { apiConfiguration, filter, cookie } }: WithApplicationState) => {
+export const fetchBase = async ({ applicationState: { apiConfiguration, filter, cookie } }: WithApplicationState, recievedCustomerId?: string) => {
     if (!apiConfiguration || !filter) {
         return Promise.reject();
     }
     const to = filter.dateTo.toISOString();
     const from = filter.dateFrom.toISOString();
-    const customerId = cookie?.customerId;
+    const customerId = recievedCustomerId || cookie?.customerId;
     // const to = '2021-02-07T00:00:00.000Z';
     // const from = '2021-02-01T00:00:00.000Z';
     const { shopId, serverUrl }: WithServerUrl & WithShopId = apiConfiguration;

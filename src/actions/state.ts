@@ -15,22 +15,26 @@ export const setFilterLectorId = (id: string) => ({ applicationState, setApplica
     return newState;
 };
 
-export const closeModal = () => ({ applicationState, setApplicationState }:WithApplicationState) => {
+export const closeModal = () => ({ getState, setApplicationState }:WithApplicationState) => {
+    const applicationState = getState();
     const newState = { ...applicationState, meta: { ...applicationState.meta, isModalOpen: false, reservationWorkoutId: undefined } } as ApplicationState;
     setApplicationState(newState);
-    return newState;
+    return getState();
 };
 
-export const openModalWithId = (calendarId: string) => ({ applicationState, setApplicationState }:WithApplicationState) => {
+export const openModalWithId = (calendarId: string) => ({ setApplicationState, getState }:WithApplicationState) => {
+    const applicationState = getState();
     const newState = { ...applicationState, meta: { ...applicationState.meta, isModalOpen: true, reservationWorkoutId: calendarId } } as ApplicationState;
     setApplicationState(newState);
-    return newState;
+    return getState();
 };
 
 export interface SendReservationResponse extends CreateReservationSuccessResponse {
     calendarId: string;
 }
-export const sendReservation = (formData: FormData) => async ({ applicationState, setApplicationState }: WithApplicationState): Promise<SendReservationResponse> => {
+
+export const sendReservation = (formData: FormData) => async ({ setApplicationState, getState }: WithApplicationState): Promise<SendReservationResponse> => {
+    const applicationState = getState();
     const serverUrl = applicationState.apiConfiguration?.serverUrl;
     const selectedCalendarId = applicationState.meta?.reservationWorkoutId;
 
@@ -48,25 +52,26 @@ export const sendReservation = (formData: FormData) => async ({ applicationState
         customerId,
         ...formData,
     };
-    setApplicationState({ ...applicationState, meta: { ...applicationState.meta, isFetching: true } });
+    setApplicationState({ ...getState(), meta: { ...getState().meta, isFetching: true } });
     const response = await createReservation({ serverUrl }, apiProps) as CreateReservationSuccessResponse;
-    setApplicationState({ ...applicationState, meta: { ...applicationState.meta, isFetching: false } });
+    setApplicationState({ ...getState(), meta: { ...getState().meta, isFetching: false } });
     return { ...response, calendarId: selectedCalendarId };
 };
 
-export const reFetchBaseData = () => async ({ applicationState, setApplicationState }: WithApplicationState) => {
-    const serverUrl = applicationState.apiConfiguration?.serverUrl;
-    const shopId = applicationState.apiConfiguration?.shopId;
+export const reFetchBaseData = () => async ({ setApplicationState, getState }: WithApplicationState) => {
+    const state = getState();
+    const serverUrl = state.apiConfiguration?.serverUrl;
+    const shopId = state.apiConfiguration?.shopId;
     if (serverUrl && shopId) {
-        const response = await fetchBase({ applicationState, setApplicationState });
+        const response = await fetchBase({ applicationState: state, setApplicationState, getState });
 
-        return setApplicationState({ ...applicationState, baseData: response, meta: { ...applicationState.meta, isModalOpen: false } });
+        return setApplicationState({ ...state, baseData: response, meta: { ...state.meta } });
     }
 };
 
-export const logOut = () => ({ applicationState, setApplicationState }: WithApplicationState) => {
+export const logOut = () => ({ getState, setApplicationState }: WithApplicationState) => {
     logOutCookie();
-    setApplicationState({ ...applicationState, cookie: {} });
+    setApplicationState({ ...getState(), cookie: {} });
 };
 
 const getCustomerCookieObj = (userData: FormData, customerId: string): SignInCookieFormat => {
@@ -79,22 +84,23 @@ const getCustomerCookieObj = (userData: FormData, customerId: string): SignInCoo
     });
 };
 
-export const setLoginCookie = (formData: FormData, customerId: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
+export const setLoginCookie = (formData: FormData, customerId: string) => ({ getState, setApplicationState }: WithApplicationState) => {
     const cookie = getCustomerCookieObj(formData, customerId);
     setCookie('customerData', cookie);
-    setApplicationState({ ...applicationState, cookie, meta: { ...applicationState.meta, isModalOpen: false } });
+    return setApplicationState({ ...getState(), cookie });
 };
 
-export const setWeekDiffFilter = (add: boolean = false) => ({ applicationState, setApplicationState }: WithApplicationState) => {
+export const setWeekDiffFilter = (add: boolean = false) => ({ getState, setApplicationState }: WithApplicationState) => {
+    const applicationState = getState();
     const { dateFrom: df, dateTo: dt } = applicationState.filter;
     const { dateFrom, dateTo } = getWeekDiffRange({ dateFrom: df, dateTo: dt }, add);
     setApplicationState({ ...applicationState, meta: { ...applicationState.meta, isFetching: true } });
-    fetchBase({ applicationState, setApplicationState }).then((baseData) => {
+    fetchBase({ applicationState, setApplicationState, getState }).then((baseData) => {
         setApplicationState({ ...applicationState, baseData, filter: { ...applicationState.filter, dateFrom, dateTo }, meta: { ...applicationState.meta, isFetching: false } });
     });
 };
 
-export const changeLanguage = (lng: string) => ({ applicationState, setApplicationState }: WithApplicationState) => {
-    setApplicationState({ ...applicationState, selectedLanguage: lng });
+export const changeLanguage = (lng: string) => ({ getState, setApplicationState }: WithApplicationState) => {
+    setApplicationState({ ...getState(), selectedLanguage: lng });
     window.localStorage.selectedLanguage = lng;
 };

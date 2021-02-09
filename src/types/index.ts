@@ -29,6 +29,7 @@ export interface FormData {
 export interface WithApplicationState {
     applicationState: ApplicationState;
     setApplicationState: (t:ApplicationState) => ApplicationState;
+    getState: () => ApplicationState;
 }
 
 export interface Address {
