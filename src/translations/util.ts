@@ -22,5 +22,5 @@ export const getTranslation = (language: string = DEFAULT_LNG) => (textKey: Text
         return translationMap[textKey];
     }
 
-    return 'NOT TRANSLATED';
+    return cs[textKey] || '';
 };
